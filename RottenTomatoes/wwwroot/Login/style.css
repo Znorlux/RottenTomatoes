@@ -74,7 +74,7 @@ h1 {
 
 label {
   position: absolute;
-  transform: translateY(6px);
+  transform: translateY(4px);
   left: 13px;
   color: rgba(255, 255, 255, 0.5);
   transition: all 0.25s ease;
@@ -83,7 +83,7 @@ label {
   font-size: 22px;
 }
 label .req {
-  margin: 2px;
+  margin: 3px;
   color: #1AB188;
 }
 
