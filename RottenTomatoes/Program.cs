@@ -1,4 +1,9 @@
+ï»¿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using RottenTomatoes.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<RottenTomatoesContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("RottenTomatoesContext") ?? throw new InvalidOperationException("Connection string 'RottenTomatoesContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -24,7 +29,7 @@ app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
 
-//Cada que añadamos un nuevo controlador y view debemos llamar al metodo MapControllerRoute y
+//Cada que aï¿½adamos un nuevo controlador y view debemos llamar al metodo MapControllerRoute y
 //buscarlo tal que sea controlller = *nombre carpeta* y action = *archivo.cshtml* TODO guardado en la carpeta View
 app.MapControllerRoute(
     name: "login",
