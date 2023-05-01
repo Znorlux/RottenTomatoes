@@ -1,7 +1,12 @@
-﻿@model RottenTomatoes.Models.User
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model RottenTomatoes.Models.User
 
 @{
-    ViewData["Title"] = "Sign Up";
+    ViewData["Title"] = "Login";
 }
 
 
@@ -19,7 +24,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function () {
-                $('body').hide().fadeIn(1);
+                $('body').hide().fadeIn(0);
             });
         </script>
     </head>
@@ -28,8 +33,8 @@
         <div class="form">
 
             <ul class="tab-group">
-                <li class="tab active"><a onclick="window.location.href='/Users/Create'">Registrarse</a></li>
-                <li class="tab"><a onclick="window.location.href='/Users/Login'">Iniciar Sesión</a></li>
+                <li class="tab"><a onclick="window.location.href='/Users/Create'">Registrarse</a></li>
+                <li class="tab active"><a onclick="window.location.href='/Users/Login'">Iniciar Sesión</a></li>
             </ul>
             <script>
                 function fadePage(event) {
@@ -43,50 +48,8 @@
                 }
             </script>
 
-            <div class="tab-content">
-                <div id="signup">
-                    <h1>Registrate Gratis</h1>
-
-                    <form asp-action="Create">
-                        @if (ViewBag.Error != null)
-                        {
-                            <p style="color: red;">@ViewBag.Error</p>
-                        }
-                        @if (ViewBag.Success == true)
-                        {
-                            <p style="color: green;">Te has registrado correctamente, ve a iniciar sesión</p>
-                        }
-                        <div class="top-row">
-                            <div class="field-wrap">
-                            </div>
-                        </div>
-
-                        <div class="field-wrap">
-                            <label>
-                                Nombre de usuario<span class="req">*</span>
-                            </label>
-                            <input type="text" asp-for="Name" required autocomplete="off" value="" />
-                        </div>
-                        <div class="field-wrap">
-                            <label>
-                                Escribe una contraseña<span class="req">*</span>
-                            </label>
-                            <input asp-for="Password" required autocomplete="off" />
-                        </div>
-
-                        <select style="margin-bottom: 18px;" name="UserType" id="UserType">
-                            <option selected value="0">Selecciona un tipo de usuario</option>
-                            <option value="Cinefilo">Cinefilo</option>
-                            <option value="Experto en cine">Experto en cine</option>
-                        </select>
-
-                        
-                        <button type="submit" value="Create"class="button button-block">Registrarse</button>
-                    </form>
-
-                </div>
                 <div id="login">
-                    <h1>Bienvenido de nuevo!</h1>
+                    <h1>¡Bienvenido de nuevo!</h1>
 
                     <form asp-action="Login">
                         @if (ViewBag.Error != null)
@@ -116,11 +79,9 @@
             </div><!-- tab-content -->
 
         </div> <!-- /form -->
-
         <!-- partial -->
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
         <script src="/login/script.js"></script>
-       
 
     </body>
 </html>
@@ -129,5 +90,7 @@
 </body>
 </html>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

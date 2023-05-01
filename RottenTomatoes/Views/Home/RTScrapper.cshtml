@@ -1,0 +1,67 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Película o Serie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #172b3b;
+            color: #ffffff;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .form-control {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .btn-primary {
+            background-color: #179b77;
+            border-color: #179b77;
+        }
+
+            .btn-primary:hover {
+                background-color: #148264;
+                border-color: #148264;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Agregar Película o Serie</h1>
+        <hr>
+        <form>
+            <div class="form-group">
+                <label for="urlInput" class="form-label">Ingrese el URL de la película o serie:</label>
+                <input type="text" class="form-control" id="urlInput">
+            </div>
+            <div class="form-group">
+                <label for="showSelect" class="form-label">Seleccione el tipo de show:</label>
+                <select class="form-control" id="showSelect">
+                    <option value="pelicula">Película</option>
+                    <option value="serie">Serie</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
