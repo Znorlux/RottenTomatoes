@@ -3,9 +3,9 @@
     public class Movie: Show
     {
         public Movie(string Title, string ImageUrl, string TomatometerScore, string 
-            AudienceScore, string Platforms, string Synopsis, string Clasification, 
+            AudienceScore, List<string> Platforms, string Synopsis, string Clasification, 
             string Genre, string OriginalLanguage, string Director, string ReleaseDate, 
-            string Runtime, Dictionary<string, string> actorRoles, string criticReview, string audienceReview) { 
+            string Runtime, Dictionary<string, string> actorRoles, List<string> criticReview, List<string> audienceReview) { 
 
             this.Title = Title;
             this.ImageURL = ImageUrl;

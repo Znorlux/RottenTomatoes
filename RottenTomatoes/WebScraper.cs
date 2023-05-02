@@ -8,6 +8,8 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
+using RottenTomatoes.Models;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 class WebScraper
 {
@@ -20,22 +22,22 @@ class WebScraper
         _url = url;
     }
 
-    public async Task GetShowInfo()
+    public async Task<Show> GetShowInfo()
     {
         switch (_showType)
         {
             case "Película":
-                await getMovieInfo(_url);
-                break;
+                Movie movie = await getMovieInfo(_url);
+                return movie;
             case "Serie":
-                await getSeriesInfo(_url);
-                break;
+                Serie serie = await getSeriesInfo(_url);
+                return serie;
             case "top10":
                 await getTop10();
-                break;
+                return null;
             default:
                 // mostrar un mensaje de error o lanzar una excepción
-                break;
+                return null;
         }
     }
     static async Task Main(string[] args)
@@ -44,7 +46,7 @@ class WebScraper
         //await getSeriesInfo();
         //await getTop10();
     }
-    static async Task getMovieInfo(string link)
+    static async Task<Movie> getMovieInfo(string link)
     {
         var url = link;
         var httpClient = new HttpClient();
@@ -77,14 +79,14 @@ class WebScraper
         var whereToWatchSection = htmlDocument.DocumentNode.SelectSingleNode("//section[@id='where-to-watch']");
 
 
-        //CREAR LISTA!
+        List<String> platforms = new List<String>();
         var platformElements = whereToWatchSection.SelectNodes(".//where-to-watch-meta");
         foreach (var platformElement in platformElements)
         {
             var platformUrl = platformElement.GetAttributeValue("href", "");
             //En el atributo image se encuentra el nombre de la plataforma donde se puede ver el Show
             var platform = platformElement.SelectSingleNode(".//where-to-watch-bubble").GetAttributeValue("image", "");
-
+            platforms.Add(platform);
             //Console.WriteLine("Plataforma disponible: " + platform);
             //Console.WriteLine("URL de la plataforma: " + platformUrl);
             //Console.WriteLine("");
@@ -145,7 +147,7 @@ class WebScraper
 
         //Pasamos a la parte final de la pagina
 
-        //CREAR DICCIONARIO!
+        Dictionary<String, String> actorRolList = new Dictionary<String, String>();
         var castSection = htmlDocument.DocumentNode.SelectSingleNode("//div[@data-qa='cast-section']");
         if (castSection != null)
         {
@@ -156,10 +158,12 @@ class WebScraper
                 //moreCasts hide
                 foreach (var item in castCrewItems)
                 {
+                    String actorName = "";
+                    String actorRol = "";
                     var actorImg = item.SelectSingleNode(".//img");
                     if (actorImg != null)
                     {
-                        var actorName = actorImg.GetAttributeValue("alt", "");//El valor del atributo alt contiene el nombre del actor
+                        actorName = actorImg.GetAttributeValue("alt", "");//El valor del atributo alt contiene el nombre del actor
 
                         //Console.WriteLine(actorName);
                     }
@@ -168,15 +172,18 @@ class WebScraper
                     {
                         var actorRolEspaciado = actorRolNode.InnerText.Trim();
                         //regex para eliminar espacios innecesarios entre palabras y dejar solo uno
-                        var actorRol = Regex.Replace(actorRolEspaciado, @"\s+", " ");
+                        actorRol = Regex.Replace(actorRolEspaciado, @"\s+", " ");
                         //Console.WriteLine(actorRol + "\n");
                     }
+                    actorRolList.Add(actorName, actorRol);
                 }
             }
         }
         //Console.WriteLine("");
         var criticReview = htmlDocument.DocumentNode.SelectNodes("//review-speech-balloon[@data-qa='critic-review' and @istopcritic= 'true']");
-        //CREAR LISTA!
+
+        List<String> criticReviews= new List<String>();
+        List<String> audienceReviews = new List<String>();
         if (criticReview != null)
         {
             //Console.WriteLine("Comentarios de la critica:");
@@ -186,9 +193,9 @@ class WebScraper
                 var reviewQuote = criticReview[i]?.GetAttributeValue("reviewquote", "");
                 reviewQuote = WebUtility.HtmlDecode(reviewQuote);
                 reviewQuote = reviewQuote?.Trim();
+                criticReviews.Add(reviewQuote);
                 //Console.WriteLine("- " + reviewQuote?.Trim()+"\n"); 
             }
-            //CREAR LISTA!
             var audienceReview = htmlDocument.DocumentNode.SelectNodes("//review-speech-balloon[@data-qa='critic-review' and @istopcritic= 'false']");
             if (audienceReview != null)
             {
@@ -197,13 +204,17 @@ class WebScraper
                 {
                     var audienceQuote = audienceReview[i]?.GetAttributeValue("reviewquote", "");
                     audienceQuote = WebUtility.HtmlDecode(audienceQuote);
+                    audienceReviews.Add(audienceQuote);
                     //Console.WriteLine("- " + audienceQuote?.Trim() + "\n");
                 }
             }
         }
+        Movie movie = new Movie(MovieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms, synopsis, rating,
+                genre, language, director, releaseDate, runtime, actorRolList, criticReviews, audienceReviews);
+        return movie;
     }
 
-        static async Task getSeriesInfo(string link)
+        static async Task<Serie> getSeriesInfo(string link)
         {
             var url = link;
             var httpClient = new HttpClient();
@@ -235,13 +246,14 @@ class WebScraper
             var whereToWatchSection = htmlDocument.DocumentNode.SelectSingleNode("//section[@id='where-to-watch']");
 
             var platformElements = whereToWatchSection.SelectNodes(".//where-to-watch-meta");
-            //CREAR LISTA!
+
+            List<String> platforms = new List<String>();
             foreach (var platformElement in platformElements)
             {
                 var platformUrl = platformElement.GetAttributeValue("href", "");
                 //En el atributo image se encuentra el nombre de la plataforma donde se puede ver el Show
                 var platform = platformElement.SelectSingleNode(".//where-to-watch-bubble").GetAttributeValue("image", "");
-
+                platforms.Add(platform);
                 //Console.WriteLine("Plataforma disponible: " + platform);
                 //Console.WriteLine("URL de la plataforma: " + platformUrl);
                 //Console.WriteLine("");
@@ -262,8 +274,9 @@ class WebScraper
 
             var starringNode = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Starring: ')]");
             var starringLinks = starringNode.SelectNodes(".//a");
-            //Console.WriteLine("Actores principales:");
-            // Iterar sobre los elementos <a> y extraer el texto de los elementos <span>
+        //Console.WriteLine("Actores principales:");
+        // Iterar sobre los elementos <a> y extraer el texto de los elementos <span>
+            List<string> actors = new List<string>(); 
             foreach (HtmlNode starring in starringLinks)
             {
                 var span = starring.SelectSingleNode(".//span");
@@ -286,9 +299,12 @@ class WebScraper
 
             var genreValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Genre: ')]");
             var genre = genreValue?.InnerText.Replace("Genre: ", "").Trim();
-            //Console.WriteLine("Genero: " + genre);
+        //Console.WriteLine("Genero: " + genre);
 
-
+        
+        Serie serie = new Serie(SerieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms, synopsis, genre,
+            creator, actors, null);
+        return serie;
         }
         static async Task getTop10()
         {

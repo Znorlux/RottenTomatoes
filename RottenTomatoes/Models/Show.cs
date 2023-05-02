@@ -11,11 +11,11 @@
 
         public string AudienceScore { get;set; }
 
-        public string criticReview { get; set; }
+        public List<string> criticReview { get; set; }
 
-        public string audienceReview { get; set; }
+        public List<string> audienceReview { get; set; }
 
-        public string Platforms { get; set; }
+        public List<string> Platforms { get; set; }
 
         public string Synopsis { get; set; }
 

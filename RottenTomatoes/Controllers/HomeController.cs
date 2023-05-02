@@ -34,7 +34,7 @@ namespace RottenTomatoes.Controllers
             var url = Request.Form["url"];
 
             var scraper = new WebScraper(showType, url);
-            await scraper.GetShowInfo();
+            Show show = await scraper.GetShowInfo();
             // lógica para mostrar la información obtenida
 
 

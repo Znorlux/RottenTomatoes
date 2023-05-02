@@ -7,9 +7,8 @@
         public string tvNetwork { get; set; }
 
         public Serie(string Title, string ImageUrl, string TomatometerScore, string
-            AudienceScore, string Platforms, string Synopsis,
-            string Genre, string Creator, List<string> mainActors, string ReleaseDate,
-            string criticReview, string audienceReview)
+            AudienceScore, List<string> Platforms, string Synopsis,
+            string Genre, string Creator, List<string> mainActors, string ReleaseDate)
         {
 
             this.Title = Title;
@@ -22,8 +21,7 @@
             this.Creator = Creator;
             this.mainActors = mainActors;
             this.ReleaseDate = ReleaseDate;
-            this.criticReview = criticReview;
-            this.audienceReview = audienceReview;
+            //quité dos atributos porque no habian criticas en las series
         }
     }
 }
