@@ -105,10 +105,11 @@ namespace RottenTomatoes.Controllers
             }
             if(user.UserType == "Experto en cine")
             {
-                return RedirectToAction(nameof(Index));//Aqui lo mandaremos a la pagina del web scrapper
+                return RedirectToAction("RTscrapper", "Home");//Aqui lo mandaremos a la pagina del web scrapper
+                                                            
             }
-             return RedirectToAction("Index", "Home");//Aqui lo mandaremos a la ruta de vista de peliculas y todo
-                                    //Archivo  Carpeta (vista, controlador)
+            return RedirectToAction(nameof(Index));//Aqui lo mandaremos a la ruta de vista de peliculas y todo
+                                                   //Archivo  Carpeta (vista, controlador)
         }
     
 

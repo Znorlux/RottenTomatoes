@@ -6,13 +6,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
     <meta charset="UTF-8">
-    <title>Agregar Película o Serie</title>
+    <title>Agregar recomendación de Película o Serie</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         body {
-            background-color: #172b3b;
+            background: #1c2331; /* color base */
+            background: linear-gradient(35deg, #172b3b, #1f3849); /* degradado */
             color: #ffffff;
         }
 
@@ -35,29 +38,78 @@
             border-color: #179b77;
         }
 
-            .btn-primary:hover {
+        .btn-primary:hover {
                 background-color: #148264;
                 border-color: #148264;
+        }
+
+        .formulario {
+            border: 2px solid #179b77;
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+            .formulario label {
+                font-size: 18px;
+                display: block;
+                margin-bottom: 10px;
             }
+
+            .formulario select {
+                font-size: 18px;
+                padding: 5px 10px;
+                border: 2px solid #179b77;
+                border-radius: 4px;
+                background-color: #f5f5f5;
+                color: #555;
+            }
+
+            .formulario .campo {
+                margin-top: 20px;
+            }
+
+                .formulario .campo label {
+                    display: block;
+                    font-size: 18px;
+                    margin-bottom: 10px;
+                }
+
+            .formulario input[type="text"] {
+                font-size: 18px;
+                padding: 5px 10px;
+                border: 2px solid #179b77;
+                border-radius: 4px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Agregar Película o Serie</h1>
         <hr>
-        <form>
-            <div class="form-group">
-                <label for="urlInput" class="form-label">Ingrese el URL de la película o serie:</label>
-                <input type="text" class="form-control" id="urlInput">
-            </div>
-            <div class="form-group">
-                <label for="showSelect" class="form-label">Seleccione el tipo de show:</label>
-                <select class="form-control" id="showSelect">
-                    <option value="pelicula">Película</option>
-                    <option value="serie">Serie</option>
+        @if (TempData["Success"] != null)
+        {
+            <p style="color: green;">Pelicula o serie agregada correctamente!</p>
+        }
+        <form method="post" action="@Url.Action("AgregarShow", "Home")">
+            <div class="formulario">
+                <label for="showType">
+                    <i class="fas fa-film"></i>
+                    Selecciona el show que quieres ingresar:
+                </label>
+                <select name="showType" id="showType">
+                    <option value="pelicula"><i class="fas fa-film"></i> Película</option>
+                    <option value="serie"><i class="fas fa-tv"></i> Serie</option>
                 </select>
+                <div class="campo">
+                    <label for="url">Ingrese el URL de la película o serie:</label>
+                    <input type="text" id="url" name="url">
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Agregar</button>
         </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
