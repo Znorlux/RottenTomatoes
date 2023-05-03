@@ -15,5 +15,9 @@ namespace RottenTomatoes.Data
         }
 
         public DbSet<RottenTomatoes.Models.User> User { get; set; } = default!;
+
+        public DbSet<RottenTomatoes.Models.Movie> Movie { get; set; } = default!;
+
+        public DbSet<RottenTomatoes.Models.Serie> Serie { get; set; } = default!;
     }
 }

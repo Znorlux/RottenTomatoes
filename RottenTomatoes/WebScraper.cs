@@ -56,7 +56,7 @@ class WebScraper
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(html);
 
-        var MovieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@class='scoreboard__title']").InnerText;
+        var MovieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@data-qa='score-panel-movie-title']").InnerText;
         var MovieTitle = WebUtility.HtmlDecode(MovieTitleElement); //utilizamos WebUtility.HtmlDecode() porque hay peliculas que
                                                                    //tienen carecteres especiales en sus titulos, asi los devolvemos a como son
 
@@ -87,9 +87,6 @@ class WebScraper
             //En el atributo image se encuentra el nombre de la plataforma donde se puede ver el Show
             var platform = platformElement.SelectSingleNode(".//where-to-watch-bubble").GetAttributeValue("image", "");
             platforms.Add(platform);
-            //Console.WriteLine("Plataforma disponible: " + platform);
-            //Console.WriteLine("URL de la plataforma: " + platformUrl);
-            //Console.WriteLine("");
         }
         //Se desciende sobre el nodo raiz hasta encontrar un nodo el cual tenga un atributo llamado "data-qa" cuyo valor sea "movie-info-synopsis" que es donde se encuentra la sinopsis
         var synopsisNode = htmlDocument.DocumentNode.Descendants()//Puede servir para bajar por todo el DOM y buscar los que cumplan con ciertas condiciones
@@ -182,7 +179,8 @@ class WebScraper
         //Console.WriteLine("");
         var criticReview = htmlDocument.DocumentNode.SelectNodes("//review-speech-balloon[@data-qa='critic-review' and @istopcritic= 'true']");
 
-        List<String> criticReviews= new List<String>();
+        List<String> criticReviews = new List<String>();
+
         List<String> audienceReviews = new List<String>();
         if (criticReview != null)
         {
@@ -209,104 +207,115 @@ class WebScraper
                 }
             }
         }
-        Movie movie = new Movie(MovieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms, synopsis, rating,
-                genre, language, director, releaseDate, runtime, actorRolList, criticReviews, audienceReviews);
+
+        string platforms_string = string.Join(", ", platforms);
+        string criticReview_string = string.Join("\n- ", criticReviews);
+        string audienceReview_string = string.Join("\n- ", audienceReviews);
+        string actorRol_string = "";
+        foreach (KeyValuePair<string, string> par in actorRolList)
+        {
+            actorRol_string += par.Key + " - " + par.Value + "\n";
+        }
+        Movie movie = new Movie(MovieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms_string, synopsis, rating,
+                genre, language, director, releaseDate, runtime, actorRol_string, criticReview_string, audienceReview_string);
         return movie;
     }
 
-        static async Task<Serie> getSeriesInfo(string link)
+    static async Task<Serie> getSeriesInfo(string link)
+    {
+        var url = link;
+        var httpClient = new HttpClient();
+        var html = await httpClient.GetStringAsync(url);
+
+
+        var htmlDocument = new HtmlDocument();
+        htmlDocument.LoadHtml(html);
+
+        var SerieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@data-qa='score-panel-movie-title']").InnerText;
+        var SerieTitle = WebUtility.HtmlDecode(SerieTitleElement);
+        //Console.WriteLine("Titulo de la serie:\n"+SerieTitle);
+        //Console.WriteLine("");
+
+        var ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + SerieTitle + "' and @slot='image']")
+                            .GetAttributeValue("src", "");
+        //Console.WriteLine("Portada de la serie: " + ImageUrl);
+
+        var scoreBoardElement = htmlDocument.DocumentNode.SelectSingleNode("//score-board");
+
+        var tomatometerScore = scoreBoardElement.GetAttributeValue("tomatometerscore", "");
+
+        var AudienceScore = scoreBoardElement.GetAttributeValue("audiencescore", "");
+
+        //Console.WriteLine("Calificacion de la critica " + tomatometerScore + "\n");
+
+        //Console.WriteLine("Calificacion de la audiencia " + AudienceScore + "\n");
+
+        var whereToWatchSection = htmlDocument.DocumentNode.SelectSingleNode("//section[@id='where-to-watch']");
+
+        var platformElements = whereToWatchSection.SelectNodes(".//where-to-watch-meta");
+
+        List<String> platforms = new List<String>();
+        foreach (var platformElement in platformElements)
         {
-            var url = link;
-            var httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync(url);
-
-
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(html);
-
-            var SerieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//p[@class='scoreboard__title']").InnerText;
-            var SerieTitle = WebUtility.HtmlDecode(SerieTitleElement);
-            //Console.WriteLine("Titulo de la serie:\n"+SerieTitle);
+            var platformUrl = platformElement.GetAttributeValue("href", "");
+            //En el atributo image se encuentra el nombre de la plataforma donde se puede ver el Show
+            var platform = platformElement.SelectSingleNode(".//where-to-watch-bubble").GetAttributeValue("image", "");
+            platforms.Add(platform);
+            //Console.WriteLine("Plataforma disponible: " + platform);
+            //Console.WriteLine("URL de la plataforma: " + platformUrl);
             //Console.WriteLine("");
+        }
+        var synopsisNode = htmlDocument.DocumentNode.Descendants()
+            .FirstOrDefault(n => n.GetAttributeValue("data-qa", "") == "series-info-description");
 
-            var ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + SerieTitle + "' and @slot='image']")
-                                .GetAttributeValue("src", "");
-            //Console.WriteLine("Portada de la serie: " + ImageUrl);
+        var synopsis = synopsisNode?.InnerText?.Trim();
+        //Console.WriteLine("Sinopsis:\n" + synopsis);
+        //Console.WriteLine("");
 
-            var scoreBoardElement = htmlDocument.DocumentNode.SelectSingleNode("//score-board");
+        //var infoList = htmlDocument.DocumentNode.SelectSingleNode("//ul");
+        //var creatorLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'series-info-creators')]");
+        var creatorValue = htmlDocument.DocumentNode.SelectSingleNode("//li[b[@data-qa='series-info-creators']]//span[@class='info-item-value']/a/span");
+        var creator = creatorValue?.InnerText.Trim();
+        //Console.WriteLine("Creador: " + creator);
+        //Console.WriteLine("");
 
-            var tomatometerScore = scoreBoardElement.GetAttributeValue("tomatometerscore", "");
-
-            var AudienceScore = scoreBoardElement.GetAttributeValue("audiencescore", "");
-
-            //Console.WriteLine("Calificacion de la critica " + tomatometerScore + "\n");
-
-            //Console.WriteLine("Calificacion de la audiencia " + AudienceScore + "\n");
-
-            var whereToWatchSection = htmlDocument.DocumentNode.SelectSingleNode("//section[@id='where-to-watch']");
-
-            var platformElements = whereToWatchSection.SelectNodes(".//where-to-watch-meta");
-
-            List<String> platforms = new List<String>();
-            foreach (var platformElement in platformElements)
-            {
-                var platformUrl = platformElement.GetAttributeValue("href", "");
-                //En el atributo image se encuentra el nombre de la plataforma donde se puede ver el Show
-                var platform = platformElement.SelectSingleNode(".//where-to-watch-bubble").GetAttributeValue("image", "");
-                platforms.Add(platform);
-                //Console.WriteLine("Plataforma disponible: " + platform);
-                //Console.WriteLine("URL de la plataforma: " + platformUrl);
-                //Console.WriteLine("");
-            }
-            var synopsisNode = htmlDocument.DocumentNode.Descendants()
-                .FirstOrDefault(n => n.GetAttributeValue("data-qa", "") == "series-info-description");
-
-            var synopsis = synopsisNode?.InnerText?.Trim();
-            //Console.WriteLine("Sinopsis:\n" + synopsis);
-            //Console.WriteLine("");
-
-            //var infoList = htmlDocument.DocumentNode.SelectSingleNode("//ul");
-            //var creatorLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'series-info-creators')]");
-            var creatorValue = htmlDocument.DocumentNode.SelectSingleNode("//li[b[@data-qa='series-info-creators']]//span[@class='info-item-value']/a/span");
-            var creator = creatorValue?.InnerText.Trim();
-            //Console.WriteLine("Creador: " + creator);
-            //Console.WriteLine("");
-
-            var starringNode = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Starring: ')]");
-            var starringLinks = starringNode.SelectNodes(".//a");
+        var starringNode = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Starring: ')]");
+        var starringLinks = starringNode.SelectNodes(".//a");
         //Console.WriteLine("Actores principales:");
         // Iterar sobre los elementos <a> y extraer el texto de los elementos <span>
-            List<string> actors = new List<string>(); 
-            foreach (HtmlNode starring in starringLinks)
-            {
-                var span = starring.SelectSingleNode(".//span");
-                string actorName = span.InnerText.Trim();
-                //Console.WriteLine(actorName);
-            }
+        List<string> actors = new List<string>();
+        foreach (HtmlNode starring in starringLinks)
+        {
+            var span = starring.SelectSingleNode(".//span");
+            string actorName = span.InnerText.Trim();
+            actors.Add(actorName);
+        }
 
 
-            //Console.WriteLine("");
+        //Console.WriteLine("");
 
-            var tvNetworkValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'TV Network: ')]");
-            var tvNetwork = tvNetworkValue?.InnerText.Replace("TV Network: ", "").Trim(); //con el replace hacemos que no se guarde el "TV network" y borramos espacios en blanco
-                                                                                          //Console.WriteLine("TV Network: "+tvNetwork);
-                                                                                          //Console.WriteLine("");
+        var tvNetworkValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'TV Network: ')]");
+        var tvNetwork = tvNetworkValue?.InnerText.Replace("TV Network: ", "").Trim(); //con el replace hacemos que no se guarde el "TV network" y borramos espacios en blanco
+                                                                                      //Console.WriteLine("TV Network: "+tvNetwork);
+                                                                                      //Console.WriteLine("");
 
-            var premiereDateValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Premiere Date: ')]");
-            var premiereDate = premiereDateValue?.InnerText.Replace("Premiere Date: ", "").Trim();
-            //Console.WriteLine("Fecha de lanzamiento: "+premiereDate);
-            //Console.WriteLine("");
+        var premiereDateValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Premiere Date: ')]");
+        var premiereDate = premiereDateValue?.InnerText.Replace("Premiere Date: ", "").Trim();
+        //Console.WriteLine("Fecha de lanzamiento: "+premiereDate);
+        //Console.WriteLine("");
 
-            var genreValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Genre: ')]");
-            var genre = genreValue?.InnerText.Replace("Genre: ", "").Trim();
+        var genreValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Genre: ')]");
+        var genre = genreValue?.InnerText.Replace("Genre: ", "").Trim();
         //Console.WriteLine("Genero: " + genre);
 
-        
-        Serie serie = new Serie(SerieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms, synopsis, genre,
-            creator, actors, null);
+
+        string platforms_string = string.Join(", ", platforms);
+        string actors_string = string.Join(" ", actors);
+        Serie serie = new Serie(SerieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms_string, synopsis, genre,
+            creator, actors_string, premiereDate);
         return serie;
-        }
-        static async Task getTop10()
+    }
+    static async Task getTop10()
         {
             var url = "https://www.rottentomatoes.com";
             var httpClient = new HttpClient();

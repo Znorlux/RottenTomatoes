@@ -1,38 +1,28 @@
-﻿namespace RottenTomatoes.Models
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RottenTomatoes.Models
 {
     public abstract class Show
     {
-        public int IdShow { get; set; }
+
+        [JsonProperty("title")]
         public string Title { get; set; }
 
+        [JsonProperty("image_url")]
         public string ImageURL { get; set; }
 
         public string TomatometerScore { get; set; }
 
         public string AudienceScore { get;set; }
 
-        public List<string> criticReview { get; set; }
-
-        public List<string> audienceReview { get; set; }
-
-        public List<string> Platforms { get; set; }
+        public string Platforms { get; set; }
 
         public string Synopsis { get; set; }
 
-        public string Clasification { get; set; }
-
         public string Genre { get; set; }
 
-        public string OriginalLanguage { get; set; }
-
-        public string Director { get; set; }
-
         public string ReleaseDate { get; set; }
-
-        public string Runtime { get; set; }
-
-                  //actor : rol
-        public Dictionary<string, string> actorRoles = new Dictionary<string, string>();
 
     }
 }
