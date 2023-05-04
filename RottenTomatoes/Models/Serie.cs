@@ -5,8 +5,8 @@ namespace RottenTomatoes.Models
     public class Serie : Show
     {
         public int SerieId { get; set; }
-        public string Creator;
-        public string mainActors;
+        public string Creator { get; set; }
+        public string mainActors { get; set; }
         public Serie() { }
 
         public Serie(string Title, string ImageUrl, string TomatometerScore, string

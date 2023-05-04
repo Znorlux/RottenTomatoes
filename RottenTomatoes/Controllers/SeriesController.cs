@@ -56,7 +56,7 @@ namespace RottenTomatoes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SerieId,Title,ImageURL,TomatometerScore,AudienceScore,Platforms,Synopsis,Genre,ReleaseDate")] Serie serie)
+        public async Task<IActionResult> Create([Bind("SerieId,Creator,mainActors,Title,ImageURL,TomatometerScore,AudienceScore,Platforms,Synopsis,Genre,ReleaseDate")] Serie serie)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace RottenTomatoes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SerieId,Title,ImageURL,TomatometerScore,AudienceScore,Platforms,Synopsis,Genre,ReleaseDate")] Serie serie)
+        public async Task<IActionResult> Edit(int id, [Bind("SerieId,Creator,mainActors,Title,ImageURL,TomatometerScore,AudienceScore,Platforms,Synopsis,Genre,ReleaseDate")] Serie serie)
         {
             if (id != serie.SerieId)
             {

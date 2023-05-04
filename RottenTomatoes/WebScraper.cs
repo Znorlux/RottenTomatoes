@@ -26,10 +26,10 @@ class WebScraper
     {
         switch (_showType)
         {
-            case "Película":
+            case "pelicula":
                 Movie movie = await getMovieInfo(_url);
                 return movie;
-            case "Serie":
+            case "serie":
                 Serie serie = await getSeriesInfo(_url);
                 return serie;
             case "top10":
@@ -46,7 +46,7 @@ class WebScraper
         //await getSeriesInfo();
         //await getTop10();
     }
-    static async Task<Movie> getMovieInfo(string link)
+    public static async Task<Movie> getMovieInfo(string link)
     {
         var url = link;
         var httpClient = new HttpClient();
@@ -316,44 +316,44 @@ class WebScraper
         return serie;
     }
     static async Task getTop10()
+    {
+        var url = "https://www.rottentomatoes.com";
+        var httpClient = new HttpClient();
+        var html = await httpClient.GetStringAsync(url);
+
+        var htmlDocument = new HtmlDocument();
+        htmlDocument.LoadHtml(html);
+
+        //Console.WriteLine("\nTop peliculas de la semana:\n");
+        for (int i = 1; i <= 10; i++)
         {
-            var url = "https://www.rottentomatoes.com";
-            var httpClient = new HttpClient();
-            var html = await httpClient.GetStringAsync(url);
-
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(html);
-
-            //Console.WriteLine("\nTop peliculas de la semana:\n");
-            for (int i = 1; i <= 10; i++)
-            {
-                //Iteramos sobre cada nodo que cumple con la condicion de ese value de class
-                //Solamente iteraremos 10 veces debido a que en estos 10 primeros nodos está el top de peliculas
-                var topValue = htmlDocument.DocumentNode.SelectSingleNode($"(//span[@class='dynamic-text-list__item-title clamp clamp-1'])[{i}]");
-                var topMovie = topValue?.InnerText.Trim();
-                topMovie = WebUtility.HtmlDecode(topMovie);
-                //Console.WriteLine("Titulo: "+topMovie);
-                var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
-                var movieLink = linkNode?.GetAttributeValue("href", "");//aqui solamente se almacena "/m/{nombre_pelicula}", asi que falta completar el link
-                var fullLink = "https://www.rottentomatoes.com" + movieLink;
-                //Console.WriteLine("Link de la pelicula: " + fullLink+"\n");
-            }
-            //Console.WriteLine("");
-
-            //Console.WriteLine("Top series de la semana:\n");
-            for (int i = 11; i <= 20; i++)
-            {
-
-                var serieValue = htmlDocument.DocumentNode.SelectSingleNode($"(//span[@class='dynamic-text-list__item-title clamp clamp-1'])[{i}]");
-                var topSerie = serieValue?.InnerText.Trim();
-                topSerie = WebUtility.HtmlDecode(topSerie);
-                //Console.WriteLine("Titulo: "+ topSerie);
-                var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
-                var serieLink = linkNode?.GetAttributeValue("href", "");
-                var fullLink = "https://www.rottentomatoes.com" + serieLink;
-                //Console.WriteLine("Link de la serie: " + fullLink + "\n");
-
-            }
+            //Iteramos sobre cada nodo que cumple con la condicion de ese value de class
+            //Solamente iteraremos 10 veces debido a que en estos 10 primeros nodos está el top de peliculas
+            var topValue = htmlDocument.DocumentNode.SelectSingleNode($"(//span[@class='dynamic-text-list__item-title clamp clamp-1'])[{i}]");
+            var topMovie = topValue?.InnerText.Trim();
+            topMovie = WebUtility.HtmlDecode(topMovie);
+            //Console.WriteLine("Titulo: "+topMovie);
+            var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
+            var movieLink = linkNode?.GetAttributeValue("href", "");//aqui solamente se almacena "/m/{nombre_pelicula}", asi que falta completar el link
+            var fullLink = "https://www.rottentomatoes.com" + movieLink;
+            //Console.WriteLine("Link de la pelicula: " + fullLink+"\n");
         }
-    
+        //Console.WriteLine("");
+
+        //Console.WriteLine("Top series de la semana:\n");
+        for (int i = 11; i <= 20; i++)
+        {
+
+            var serieValue = htmlDocument.DocumentNode.SelectSingleNode($"(//span[@class='dynamic-text-list__item-title clamp clamp-1'])[{i}]");
+            var topSerie = serieValue?.InnerText.Trim();
+            topSerie = WebUtility.HtmlDecode(topSerie);
+            //Console.WriteLine("Titulo: "+ topSerie);
+            var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
+            var serieLink = linkNode?.GetAttributeValue("href", "");
+            var fullLink = "https://www.rottentomatoes.com" + serieLink;
+            //Console.WriteLine("Link de la serie: " + fullLink + "\n");
+
+        }
+    }
+
 }
