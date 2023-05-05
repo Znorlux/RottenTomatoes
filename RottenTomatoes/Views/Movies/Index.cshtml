@@ -1,119 +1,127 @@
 ﻿@model IEnumerable<RottenTomatoes.Models.Movie>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <title>
+        Movies
+    </title>
+    <style>
+        body {
+            background: linear-gradient(#141e30, #243b55);
+            color: white;
+            font-family: Arial, sans-serif;
+        }
 
-<h1>Index</h1>
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CriticReview)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AudienceReview)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Clasification)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OriginalLanguage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Director)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Runtime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ActorRoles)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageURL)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TomatometerScore)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AudienceScore)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Platforms)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Synopsis)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReleaseDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CriticReview)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AudienceReview)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Clasification)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OriginalLanguage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Director)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Runtime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ActorRoles)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageURL)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TomatometerScore)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AudienceScore)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Platforms)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Synopsis)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MovieId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MovieId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MovieId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        h1 {
+            font-size: 36px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .movie {
+            display: flex;
+            background: linear-gradient(#082330, #1D3045);
+            margin-bottom: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-image {
+            flex: 1;
+            max-width: 300px;
+            height: 450px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid white;
+        }
+
+        .movie-details {
+            flex: 2;
+            padding: 20px;
+        }
+        .titles{
+            text-decoration: underline;
+        }
+
+        .movie-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+
+        .movie-synopsis {
+            font-size: 18px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .movie-critic-review,
+        .movie-audience-review
+        .movie-actor-roles {
+            margin-bottom: 10px;
+
+        }
+
+            .movie-critic-review p,
+            .movie-audience-review p {
+                margin: 0;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movies Recommendations</h1>
+
+        @foreach (var item in Model)
+        {
+            <div class="movie">
+                <div class="movie-image" style="background-image: url('@item.ImageURL')"></div>
+                <div class="movie-details">
+                    <h5 class="movie-title">@item.Title</h5>
+                    <p class="movie-synopsis">@item.Synopsis</p>                              
+                    <p><strong>Classification:</strong> @item.Clasification</p>
+                    <p><strong>Original Language:</strong> @item.OriginalLanguage</p>
+                    <p><strong>Platforms:</strong> @item.Platforms</p>
+                    <p><strong>Director:</strong> @item.Director</p>
+                    <p><strong>Runtime:</strong> @item.Runtime</p>
+                    <p><strong>Tomatometer Score:</strong> @item.TomatometerScore</p>
+                    <p><strong>Audience Score:</strong> @item.AudienceScore</p>
+                    <p><strong>Release Date:</strong> @item.ReleaseDate</p>
+                    <div class="movie-actor-roles" style="white-space: pre-line;">
+                        <h3 class="titles">Actors - Roles:</h3>
+                        <p>@item.ActorRoles</p>
+                    </div>
+                    <div class="movie-critic-review">
+                        <h3 class="titles">Critic Review:</h3>
+                        <p>@item.CriticReview</p>
+                    </div>
+                    <div class="movie-audience-review">
+                        <h3 class="titles">Audience Review:</h3>
+                        <p>@item.AudienceReview</p>
+                    </div>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.MovieId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.MovieId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.MovieId">Delete</a>
+                    </td>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>

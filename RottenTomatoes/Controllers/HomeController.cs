@@ -32,6 +32,10 @@ namespace RottenTomatoes.Controllers
         {
             return View();
         }
+        public IActionResult Recomendaciones()
+        {
+            return View();
+        }
         [HttpPost]
 
         public async Task<IActionResult> CreateMovie([Bind("MovieId,CriticReview,AudienceReview,Clasification,OriginalLanguage,Director,Runtime,ActorRoles,Title,ImageURL,TomatometerScore,AudienceScore,Platforms,Synopsis,Genre,ReleaseDate")] Movie movie)

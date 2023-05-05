@@ -1,0 +1,116 @@
+﻿@model IEnumerable<RottenTomatoes.Models.Movie>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movies</title>
+    <style>
+        body {
+            background: linear-gradient(#141e30, #243b55);
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .movie {
+            display: flex;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-image {
+            flex: 1;
+            max-width: 300px;
+            height: 450px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .movie-details {
+            flex: 2;
+            padding: 20px;
+        }
+
+        .movie-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .movie-synopsis {
+            font-size: 18px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            height: 84px;
+            overflow: hidden;
+        }
+
+        .movie-critic-review,
+        .movie-audience-review,
+        .movie-actor-roles {
+            margin-bottom: 10px;
+        }
+
+        .movie-critic-review p,
+        .movie-audience-review p {
+            margin: 0;
+        }
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <h1>Movies</h1>
+            
+            @foreach (var item in Model)
+            {
+                <div class="movie">
+                    <div class="movie-image" style="background-image: url('@item.ImageURL')"></div>
+                    <div class="movie-details">
+                        <h2 class="movie-title">@item.Title</h2>
+                        <p class="movie-synopsis">@item.Synopsis</p>
+                        <div class="movie-critic-review">
+                            <h3>Critic Review:</h3>
+                            <p>@item.CriticReview</p>
+                        </div>
+                        <div class="movie-audience-review">
+                            <h3>Audience Review:</h3>
+                            <p>@item.AudienceReview</p>
+                        </div>
+                        <div class="movie-actor-roles">
+                            <h3>Actor Roles:</h3>
+                            <p>@item.ActorRoles</p>
+                        </div>
+                        <p><strong>Classification:</strong> @item.Clasification</p>
+                        <p><strong>Original Language:</strong> @item.OriginalLanguage</p>
+                        <p><strong>Director:</strong> @item.Director</p>
+                        <p><strong>Runtime:</strong> @item.Runtime</p>
+                        <p><strong>Tomatometer Score:</strong> @item.TomatometerScore</p>
+                        <p><strong>Release Date:</strong> @item.ReleaseDate</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </body>
+</html>
+           
+
+
+
+
+
+
+

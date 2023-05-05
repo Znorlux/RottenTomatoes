@@ -94,9 +94,6 @@ class WebScraper
 
         var synopsis = synopsisNode?.InnerText?.Trim();//El Trim solo es borrar los espacios vacios
 
-        //Console.WriteLine("Sinopsis:\n"+ synopsis);
-        //Console.WriteLine("");
-
         //Mucha de la información de la pelicula se encuentra en el elemento ul (lista desordenada de HTML)
         //con id=info, por lo tanto accederemos a cada elemento que necesitemos
 
@@ -105,8 +102,6 @@ class WebScraper
         var ratingLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Rating:']");
         var ratingValue = ratingLabel?.ParentNode?.SelectSingleNode(".//span[contains(@data-qa, 'movie-info-item-value')]");
         var rating = ratingValue?.InnerText.Trim();
-        //Console.WriteLine("Clasificacion:\n" + rating);
-        //Console.WriteLine("");
 
         var genreLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Genre:']");
         var genreValue = genreLabel?.ParentNode?.SelectSingleNode(".//span[contains(@data-qa, 'movie-info-item-value')]");
@@ -115,32 +110,22 @@ class WebScraper
         genre = Regex.Replace(genre, @"\s+", " ");
         genre = genre?.Replace(",", ", ");
         genre = WebUtility.HtmlDecode(genre);
-        //Console.WriteLine("Generos:\n" + genre);
-        //Console.WriteLine("");
 
         var languageLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Original Language:']");
         var languageValue = languageLabel?.ParentNode?.SelectSingleNode(".//span[contains(@data-qa, 'movie-info-item-value')]");
         var language = languageValue?.InnerText.Trim();
-        //Console.WriteLine("Lenguaje original:\n"+ language);
-        //Console.WriteLine("");
 
         var directorLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Director:']");
         var directorValue = directorLabel?.ParentNode?.SelectSingleNode(".//a[contains(@data-qa, 'movie-info-director')]");
         var director = directorValue?.InnerText.Trim();
-        //Console.WriteLine("Director:\n" + director);
-        //Console.WriteLine("");
 
         var releaseLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Release Date (Theaters):']");
         var releaseValue = releaseLabel?.ParentNode?.SelectSingleNode(".//time");
         var releaseDate = releaseValue?.Attributes["datetime"]?.Value.Trim();
-        //Console.WriteLine("Fecha de estreno:\n"+releaseDate);
-        //Console.WriteLine("");
 
         var runtimeLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Runtime:']");
         var runtimeValue = runtimeLabel?.ParentNode?.SelectSingleNode(".//time");
         var runtime = runtimeValue?.InnerText.Trim();
-        //Console.WriteLine("Duración:\n" + runtime);
-        //Console.WriteLine("");
 
         //Pasamos a la parte final de la pagina
 
@@ -162,7 +147,6 @@ class WebScraper
                     {
                         actorName = actorImg.GetAttributeValue("alt", "");//El valor del atributo alt contiene el nombre del actor
 
-                        //Console.WriteLine(actorName);
                     }
                     var actorRolNode = item.SelectSingleNode(".//p[@class='p--small']");
                     if (actorRolNode != null)
@@ -170,7 +154,7 @@ class WebScraper
                         var actorRolEspaciado = actorRolNode.InnerText.Trim();
                         //regex para eliminar espacios innecesarios entre palabras y dejar solo uno
                         actorRol = Regex.Replace(actorRolEspaciado, @"\s+", " ");
-                        //Console.WriteLine(actorRol + "\n");
+
                     }
                     actorRolList.Add(actorName, actorRol);
                 }
@@ -184,26 +168,21 @@ class WebScraper
         List<String> audienceReviews = new List<String>();
         if (criticReview != null)
         {
-            //Console.WriteLine("Comentarios de la critica:");
-
             for (int i = 0; i < 3 && i < criticReview.Count; i++)
             {
                 var reviewQuote = criticReview[i]?.GetAttributeValue("reviewquote", "");
                 reviewQuote = WebUtility.HtmlDecode(reviewQuote);
                 reviewQuote = reviewQuote?.Trim();
                 criticReviews.Add(reviewQuote);
-                //Console.WriteLine("- " + reviewQuote?.Trim()+"\n"); 
             }
             var audienceReview = htmlDocument.DocumentNode.SelectNodes("//review-speech-balloon[@data-qa='critic-review' and @istopcritic= 'false']");
             if (audienceReview != null)
             {
-                //Console.WriteLine("Comentarios de la audiencia:");
                 for (int i = 0; i < 3 && i < audienceReview.Count; i++)
                 {
                     var audienceQuote = audienceReview[i]?.GetAttributeValue("reviewquote", "");
                     audienceQuote = WebUtility.HtmlDecode(audienceQuote);
                     audienceReviews.Add(audienceQuote);
-                    //Console.WriteLine("- " + audienceQuote?.Trim() + "\n");
                 }
             }
         }
@@ -216,6 +195,8 @@ class WebScraper
         {
             actorRol_string += par.Key + " - " + par.Value + "\n";
         }
+        actorRol_string = actorRol_string.TrimEnd();
+
         Movie movie = new Movie(MovieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms_string, synopsis, rating,
                 genre, language, director, releaseDate, runtime, actorRol_string, criticReview_string, audienceReview_string);
         return movie;
@@ -233,22 +214,15 @@ class WebScraper
 
         var SerieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@data-qa='score-panel-movie-title']").InnerText;
         var SerieTitle = WebUtility.HtmlDecode(SerieTitleElement);
-        //Console.WriteLine("Titulo de la serie:\n"+SerieTitle);
-        //Console.WriteLine("");
 
         var ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + SerieTitle + "' and @slot='image']")
                             .GetAttributeValue("src", "");
-        //Console.WriteLine("Portada de la serie: " + ImageUrl);
 
         var scoreBoardElement = htmlDocument.DocumentNode.SelectSingleNode("//score-board");
 
         var tomatometerScore = scoreBoardElement.GetAttributeValue("tomatometerscore", "");
 
         var AudienceScore = scoreBoardElement.GetAttributeValue("audiencescore", "");
-
-        //Console.WriteLine("Calificacion de la critica " + tomatometerScore + "\n");
-
-        //Console.WriteLine("Calificacion de la audiencia " + AudienceScore + "\n");
 
         var whereToWatchSection = htmlDocument.DocumentNode.SelectSingleNode("//section[@id='where-to-watch']");
 
@@ -261,27 +235,18 @@ class WebScraper
             //En el atributo image se encuentra el nombre de la plataforma donde se puede ver el Show
             var platform = platformElement.SelectSingleNode(".//where-to-watch-bubble").GetAttributeValue("image", "");
             platforms.Add(platform);
-            //Console.WriteLine("Plataforma disponible: " + platform);
-            //Console.WriteLine("URL de la plataforma: " + platformUrl);
-            //Console.WriteLine("");
         }
         var synopsisNode = htmlDocument.DocumentNode.Descendants()
             .FirstOrDefault(n => n.GetAttributeValue("data-qa", "") == "series-info-description");
 
         var synopsis = synopsisNode?.InnerText?.Trim();
-        //Console.WriteLine("Sinopsis:\n" + synopsis);
-        //Console.WriteLine("");
 
-        //var infoList = htmlDocument.DocumentNode.SelectSingleNode("//ul");
-        //var creatorLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'series-info-creators')]");
         var creatorValue = htmlDocument.DocumentNode.SelectSingleNode("//li[b[@data-qa='series-info-creators']]//span[@class='info-item-value']/a/span");
         var creator = creatorValue?.InnerText.Trim();
-        //Console.WriteLine("Creador: " + creator);
-        //Console.WriteLine("");
 
         var starringNode = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Starring: ')]");
         var starringLinks = starringNode.SelectNodes(".//a");
-        //Console.WriteLine("Actores principales:");
+
         // Iterar sobre los elementos <a> y extraer el texto de los elementos <span>
         List<string> actors = new List<string>();
         foreach (HtmlNode starring in starringLinks)
@@ -291,26 +256,18 @@ class WebScraper
             actors.Add(actorName);
         }
 
-
-        //Console.WriteLine("");
-
         var tvNetworkValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'TV Network: ')]");
-        var tvNetwork = tvNetworkValue?.InnerText.Replace("TV Network: ", "").Trim(); //con el replace hacemos que no se guarde el "TV network" y borramos espacios en blanco
-                                                                                      //Console.WriteLine("TV Network: "+tvNetwork);
-                                                                                      //Console.WriteLine("");
+        var tvNetwork = tvNetworkValue?.InnerText.Replace("TV Network: ", "").Trim(); //con el replace hacemos que no se guarde el "TV network"
+                                                                                      //y borramos espacios en blanco
 
         var premiereDateValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Premiere Date: ')]");
         var premiereDate = premiereDateValue?.InnerText.Replace("Premiere Date: ", "").Trim();
-        //Console.WriteLine("Fecha de lanzamiento: "+premiereDate);
-        //Console.WriteLine("");
 
         var genreValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Genre: ')]");
         var genre = genreValue?.InnerText.Replace("Genre: ", "").Trim();
-        //Console.WriteLine("Genero: " + genre);
-
 
         string platforms_string = string.Join(", ", platforms);
-        string actors_string = string.Join(" ", actors);
+        string actors_string = string.Join("\n", actors);
         Serie serie = new Serie(SerieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms_string, synopsis, genre,
             creator, actors_string, premiereDate);
         return serie;
@@ -324,7 +281,6 @@ class WebScraper
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(html);
 
-        //Console.WriteLine("\nTop peliculas de la semana:\n");
         for (int i = 1; i <= 10; i++)
         {
             //Iteramos sobre cada nodo que cumple con la condicion de ese value de class
@@ -336,22 +292,16 @@ class WebScraper
             var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
             var movieLink = linkNode?.GetAttributeValue("href", "");//aqui solamente se almacena "/m/{nombre_pelicula}", asi que falta completar el link
             var fullLink = "https://www.rottentomatoes.com" + movieLink;
-            //Console.WriteLine("Link de la pelicula: " + fullLink+"\n");
         }
-        //Console.WriteLine("");
-
-        //Console.WriteLine("Top series de la semana:\n");
         for (int i = 11; i <= 20; i++)
         {
 
             var serieValue = htmlDocument.DocumentNode.SelectSingleNode($"(//span[@class='dynamic-text-list__item-title clamp clamp-1'])[{i}]");
             var topSerie = serieValue?.InnerText.Trim();
             topSerie = WebUtility.HtmlDecode(topSerie);
-            //Console.WriteLine("Titulo: "+ topSerie);
             var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
             var serieLink = linkNode?.GetAttributeValue("href", "");
             var fullLink = "https://www.rottentomatoes.com" + serieLink;
-            //Console.WriteLine("Link de la serie: " + fullLink + "\n");
 
         }
     }
