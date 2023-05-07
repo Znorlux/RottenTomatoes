@@ -29,15 +29,45 @@ namespace RottenTomatoes.Controllers
             var scraper = new WebScraper("top10", null);
             List<List<Top10>> top10 = await scraper.getTop10();
             int movieCount = 0;
-            int serieCount = 0;
+            int serieCount = 0; 
             foreach (var top10value in top10)
             {
                 foreach (var top in top10value)
                 {
                     await Create(top);//Con el primer elemento del top, lo mandamos a la base de datos de Top10
 
-                    //CONDICIONALES NO FUNCIONALES PARA NO DAÑAR AUN
-                    
+                    if (movieCount < 10)
+                    {
+                        var currentMovie = new WebScraper("pelicula", top.url);
+                        Show show = await currentMovie.GetShowInfo();
+                        Movie movie = (Movie)show;
+
+                        // Verificamos si ya existe una película con el mismo título y fecha de lanzamiento
+                        var existingMovie = await _context.Movie.FirstOrDefaultAsync(m => m.Title == movie.Title);
+
+                        if (existingMovie == null)
+                        {
+                            await _context.Movie.AddAsync(movie);
+                            await _context.SaveChangesAsync();
+                            
+                        }
+                        movieCount++;
+                    }
+                    //series
+                    else if(serieCount < 10)
+                    {
+                        var currentSerie = new WebScraper("serie", top.url);
+                        Show show = await currentSerie.GetShowInfo();
+                        Serie serie = (Serie)show;
+
+                        var existingSerie = await _context.Serie.FirstOrDefaultAsync(s => s.Title == serie.Title);
+                        if(existingSerie == null)
+                        {
+                            await _context.Serie.AddAsync(serie); 
+                            await _context.SaveChangesAsync();
+                        }
+                        serieCount++;
+                    }
                 }//Al finalizar este metodo se habran creado objetos de tipo top10 y añadidos a la base de datos
             }//Screapeado todos los elementos
         }//Creado objetos de tipo Movie y Serie y enviados a su BD correspondiente

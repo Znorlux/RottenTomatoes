@@ -62,11 +62,11 @@ class WebScraper
         var MovieTitle = WebUtility.HtmlDecode(MovieTitleElement); //utilizamos WebUtility.HtmlDecode() porque hay peliculas que
                                                                    //tienen carecteres especiales en sus titulos, asi los devolvemos a como son
 
-        //Console.WriteLine("Titulo de la pelicula: " + MovieTitle + "\n");
+        
 
         var ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + MovieTitleElement + "' and @slot='image']")
                             .GetAttributeValue("src", "");
-        //Console.WriteLine("Imagen de la pelicula " +  ImageUrl+"\n");
+        
 
         var scoreBoardElement = htmlDocument.DocumentNode.SelectSingleNode("//score-board");
 
@@ -104,6 +104,10 @@ class WebScraper
         var ratingLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Rating:']");
         var ratingValue = ratingLabel?.ParentNode?.SelectSingleNode(".//span[contains(@data-qa, 'movie-info-item-value')]");
         var rating = ratingValue?.InnerText.Trim();
+        if(rating == null)
+        {
+            rating = "Undefined";
+        }
 
         var genreLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Genre:']");
         var genreValue = genreLabel?.ParentNode?.SelectSingleNode(".//span[contains(@data-qa, 'movie-info-item-value')]");
@@ -121,9 +125,14 @@ class WebScraper
         var directorValue = directorLabel?.ParentNode?.SelectSingleNode(".//a[contains(@data-qa, 'movie-info-director')]");
         var director = directorValue?.InnerText.Trim();
 
+        //Caso en que haya salido en cines
         var releaseLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Release Date (Theaters):']");
         var releaseValue = releaseLabel?.ParentNode?.SelectSingleNode(".//time");
         var releaseDate = releaseValue?.Attributes["datetime"]?.Value.Trim();
+        if (releaseDate == null)
+        {
+            releaseDate = "Fecha indefinida";
+        }
 
         var runtimeLabel = infoList.SelectSingleNode(".//b[contains(@data-qa, 'movie-info-item-label') and text()='Runtime:']");
         var runtimeValue = runtimeLabel?.ParentNode?.SelectSingleNode(".//time");
@@ -217,9 +226,24 @@ class WebScraper
         var SerieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@data-qa='score-panel-movie-title']").InnerText;
         var SerieTitle = WebUtility.HtmlDecode(SerieTitleElement);
 
-        var ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + SerieTitle + "' and @slot='image']")
-                            .GetAttributeValue("src", "");
+        string ImageUrl = null;
 
+        try
+        {
+            ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + SerieTitle + "' and @slot='image']")
+                                .GetAttributeValue("src", "");
+        }
+        catch (NullReferenceException)
+        {
+            // La selección del nodo falló, se asigna un valor nulo a ImageUrl
+        }
+
+        if (string.IsNullOrEmpty(ImageUrl))
+        {
+            // Casos especiales donde el título de la serie tenga caracteres especiales como "&"
+            ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + SerieTitle.Replace("&", "&amp;") + "' and @slot='image']")
+                                ?.GetAttributeValue("src", "");
+        }
         var scoreBoardElement = htmlDocument.DocumentNode.SelectSingleNode("//score-board");
 
         var tomatometerScore = scoreBoardElement.GetAttributeValue("tomatometerscore", "");
@@ -228,16 +252,22 @@ class WebScraper
 
         var whereToWatchSection = htmlDocument.DocumentNode.SelectSingleNode("//section[@id='where-to-watch']");
 
-        var platformElements = whereToWatchSection.SelectNodes(".//where-to-watch-meta");
+        var platformElements = whereToWatchSection?.SelectNodes(".//where-to-watch-meta");
+        
 
         List<String> platforms = new List<String>();
-        foreach (var platformElement in platformElements)
+        if (platformElements != null)
         {
-            var platformUrl = platformElement.GetAttributeValue("href", "");
-            //En el atributo image se encuentra el nombre de la plataforma donde se puede ver el Show
-            var platform = platformElement.SelectSingleNode(".//where-to-watch-bubble").GetAttributeValue("image", "");
-            platforms.Add(platform);
+            foreach (var platformElement in platformElements)
+            {
+                var platformUrl = platformElement.GetAttributeValue("href", "");
+                //En el atributo image se encuentra el nombre de la plataforma donde se puede ver el Show
+                var platform = platformElement.SelectSingleNode(".//where-to-watch-bubble").GetAttributeValue("image", "");
+                platforms.Add(platform);
+            }
         }
+        
+
         var synopsisNode = htmlDocument.DocumentNode.Descendants()
             .FirstOrDefault(n => n.GetAttributeValue("data-qa", "") == "series-info-description");
 
@@ -245,19 +275,26 @@ class WebScraper
 
         var creatorValue = htmlDocument.DocumentNode.SelectSingleNode("//li[b[@data-qa='series-info-creators']]//span[@class='info-item-value']/a/span");
         var creator = creatorValue?.InnerText.Trim();
-
+        if(creator == null)
+        {
+            creator = "No disponible";
+        }
         var starringNode = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Starring: ')]");
         var starringLinks = starringNode?.SelectNodes(".//a");
 
+
         // Iterar sobre los elementos <a> y extraer el texto de los elementos <span>
         List<string> actors = new List<string>();
-        foreach (HtmlNode starring in starringLinks)
+        if (starringLinks != null)
         {
-            var span = starring.SelectSingleNode(".//span");
-            string actorName = span.InnerText.Trim();
-            actors.Add(actorName);
+            foreach (HtmlNode starring in starringLinks)
+            {
+                var span = starring.SelectSingleNode(".//span");
+                string actorName = span.InnerText.Trim();
+                actors.Add(actorName);
+            }
         }
-
+        
         var tvNetworkValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'TV Network: ')]");
         var tvNetwork = tvNetworkValue?.InnerText.Replace("TV Network: ", "").Trim(); //con el replace hacemos que no se guarde el "TV network"
                                                                                       //y borramos espacios en blanco
@@ -268,8 +305,25 @@ class WebScraper
         var genreValue = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Genre: ')]");
         var genre = genreValue?.InnerText.Replace("Genre: ", "").Trim();
 
-        string platforms_string = string.Join(", ", platforms);
-        string actors_string = string.Join("\n", actors);
+        string platforms_string = "";
+        if(platforms.Count !=0)
+        {
+            platforms_string = string.Join(", ", platforms);
+        }
+        else
+        {
+            platforms_string = "No disponible";
+        }
+        string actors_string = "";
+        if (actors.Count != 0)
+        {
+            actors_string = string.Join("\n", actors);
+        }
+        else
+        {
+            actors_string = "No disponible";
+        }
+        
         Serie serie = new Serie(SerieTitle, ImageUrl, tomatometerScore, AudienceScore, platforms_string, synopsis, genre,
             creator, actors_string, premiereDate);
         return serie;
@@ -308,6 +362,8 @@ class WebScraper
             var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
             var serieLink = linkNode?.GetAttributeValue("href", "");
             var fullLink = "https://www.rottentomatoes.com" + serieLink;
+            //en full link puede quedar por ejemplo algo como https://www.rottentomatoes.com/tv/silo/s01
+            fullLink = fullLink.Substring(0, fullLink.LastIndexOf("/"));
             Top10 top10serie = new Top10(topSerie, fullLink);
             top10seriesList.Add(top10serie);
         }

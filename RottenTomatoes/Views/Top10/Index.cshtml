@@ -3,13 +3,14 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<body>
+    <div id="loader"></div>
 <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-
+<link rel="stylesheet" href="/css/loadscreen.css">
 <h2>Películas</h2>
 <table class="table">
     <thead>
@@ -75,3 +76,10 @@
         }
     </tbody>
 </table>
+</body>
+<script>
+    window.addEventListener("load", function () {
+        var loader = document.getElementById("loader");
+        loader.style.display = "none";
+    });
+</script>

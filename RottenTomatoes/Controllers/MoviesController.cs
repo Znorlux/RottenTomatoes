@@ -22,11 +22,17 @@ namespace RottenTomatoes.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
+            
               return _context.Movie != null ? 
                           View(await _context.Movie.ToListAsync()) :
                           Problem("Entity set 'RottenTomatoesContext.Movie'  is null.");
         }
-
+        public async Task ClearTop10Data()
+        {
+            var MovieList = await _context.Movie.ToListAsync();
+            _context.Movie.RemoveRange(MovieList);
+            await _context.SaveChangesAsync();
+        }
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
