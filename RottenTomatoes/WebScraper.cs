@@ -10,6 +10,7 @@ using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using RottenTomatoes.Models;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Collections.Generic;
 
 class WebScraper
 {
@@ -32,14 +33,15 @@ class WebScraper
             case "serie":
                 Serie serie = await getSeriesInfo(_url);
                 return serie;
-            case "top10":
-                await getTop10();
-                return null;
+            //case "top10":
+                //List <List<Top10>> = getTop10();
+                //return top10;
             default:
                 // mostrar un mensaje de error o lanzar una excepción
                 return null;
         }
     }
+    
     static async Task Main(string[] args)
     {
         //await getMovieInfo();
@@ -245,7 +247,7 @@ class WebScraper
         var creator = creatorValue?.InnerText.Trim();
 
         var starringNode = htmlDocument.DocumentNode.SelectSingleNode("//li[contains(., 'Starring: ')]");
-        var starringLinks = starringNode.SelectNodes(".//a");
+        var starringLinks = starringNode?.SelectNodes(".//a");
 
         // Iterar sobre los elementos <a> y extraer el texto de los elementos <span>
         List<string> actors = new List<string>();
@@ -272,7 +274,7 @@ class WebScraper
             creator, actors_string, premiereDate);
         return serie;
     }
-    static async Task getTop10()
+    public async Task<List<List<Top10>>> getTop10()
     {
         var url = "https://www.rottentomatoes.com";
         var httpClient = new HttpClient();
@@ -281,6 +283,7 @@ class WebScraper
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(html);
 
+        List<Top10> top10moviesList = new List<Top10>();
         for (int i = 1; i <= 10; i++)
         {
             //Iteramos sobre cada nodo que cumple con la condicion de ese value de class
@@ -292,7 +295,10 @@ class WebScraper
             var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
             var movieLink = linkNode?.GetAttributeValue("href", "");//aqui solamente se almacena "/m/{nombre_pelicula}", asi que falta completar el link
             var fullLink = "https://www.rottentomatoes.com" + movieLink;
+            Top10 top10movie = new Top10(topMovie, fullLink);//Titulo + link
+            top10moviesList.Add(top10movie);
         }
+        List<Top10> top10seriesList = new List<Top10>();
         for (int i = 11; i <= 20; i++)
         {
 
@@ -302,8 +308,13 @@ class WebScraper
             var linkNode = htmlDocument.DocumentNode.SelectSingleNode($"(//a[@class='dynamic-text-list__tomatometer-group'])[{i}]");
             var serieLink = linkNode?.GetAttributeValue("href", "");
             var fullLink = "https://www.rottentomatoes.com" + serieLink;
-
+            Top10 top10serie = new Top10(topSerie, fullLink);
+            top10seriesList.Add(top10serie);
         }
+        List<List<Top10>> top10list = new List<List<Top10>>();//Lista que almacenara dos listas de top, una de movies y otra de las series
+        top10list.Add(top10moviesList);
+        top10list.Add(top10seriesList);
+        return top10list;
     }
 
 }
