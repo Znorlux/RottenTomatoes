@@ -73,15 +73,27 @@ namespace RottenTomatoes.Controllers
         }//Creado objetos de tipo Movie y Serie y enviados a su BD correspondiente
 
 
+        public async Task<IActionResult> Loading()
+        {
+            // Mostrar la vista de carga
+            return View();
+        }
+
         public async Task<IActionResult> Index()
         {
-            
-            await ClearTop10Data();//Primero borramos todo de la base de datos para volver a generar los nuevos datos "semanales"
-            await add_top10();//Creamos los objetos de top10 y los añadimos a la base de datos
-            //De esta manera, no se repetiran los datos nunca
-            return _context.Top10 != null ? 
-                          View(await _context.Top10.ToListAsync()) :
-                          Problem("Entity set 'RottenTomatoesContext.Top10'  is null.");
+            // Ejecutar ambas tareas en paralelo
+            await Task.WhenAll(ClearTop10Data(), add_top10());
+
+            // Redirigir al usuario a la vista de Top10
+            return _context.Top10 != null ?
+                View(await _context.Top10.ToListAsync()) :
+                Problem("Entity set 'RottenTomatoesContext.Top10' is null.");
+        }
+
+        public async Task<IActionResult> Top10()
+        {
+            // Redirigir al usuario a la vista de Loading
+            return RedirectToAction("Loading");
         }
         public async Task ClearTop10Data()
         {

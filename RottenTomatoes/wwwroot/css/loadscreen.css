@@ -1,18 +1,96 @@
-#loader {
-  border: 16px solid #f3f3f3; 
-  border-top: 16px solid #3498db; 
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -60px;
-  margin-left: -60px;
+body {
+	background: #141414;
+	width: 100%;
+	height: 100%;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.loading {
+	z-index: 1;
+	text-transform: uppercase;
+	font-family: 'Cabin Condensed', sans-serif;
+	font-weight: bold;
+	font-size: 100pt;
+	text-align: center;
+	height: 120px;
+	line-height: 110px;
+	vertical-align: bottom;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 100px;
+	bottom: 0;
+	display: block;
+}
+
+.loading-2 {
+	top: 300px;
+	width: 473px;
+	height: 97px;
+	font-size: 0;
+	background: rgba(255, 255, 255, 0.06);
+	margin: 0 auto;
+}
+.loading-text {
+	z-index: 2;
+	font-family: 'Bebas Neue', sans-serif;
+	font-size: 24px;
+	color: white;
+	text-align: center;
+	margin-top: 20px;
+}
+.ff {
+	position: absolute;
+	font-size: 12pt;
+	top: -20px;
+	color: white;
+	line-height: 12pt;
+}
+
+.loading-2-text {
+	background-image: url("greenbg.jpg");
+	width: 473px;
+	height: 97px;
+	display: inline-block;
+}
+
+@keyframes wave-animation {
+	0% {
+		background-position: 0 bottom;
+	}
+
+	100% {
+		background-position: 200px bottom;
+	}
+}
+
+@keyframes loading-animation {
+	0% {
+		background-size: 200px 0px;
+	}
+
+	100% {
+		background-size: 200px 200px;
+	}
+}
+
+.wave {
+	background-image: url("greenbg.jpg");
+	-moz-background-clip: text;
+	-o-background-clip: text;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	text-shadow: 0px 0px rgba(255, 255, 255, 0.06);
+	animation: wave-animation 1s infinite linear, loading-animation 10s infinite linear alternate;
+	background-size: 200px 100px;
+	background-repeat: repeat-x;
+	opacity: 1;
+}
+
+.wave-2 {
+	-moz-background-clip: initial;
+	-o-background-clip: initial;
+	-webkit-background-clip: initial;
+	background-clip: initial;
+	display: inline-block;
 }

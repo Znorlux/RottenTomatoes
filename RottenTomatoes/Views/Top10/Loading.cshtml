@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Loading";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="/css/loadscreen.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+</head>
+<body>
+    <!-- partial:index.partial.html -->
+    <link href='https://fonts.googleapis.com/css?family=Cabin+Condensed:700' rel='stylesheet' type='text/css'>
+
+    <div class="loading wave">
+        Cargando
+    </div>
+    <div class="loading-text">
+        Estamos obteniendo los tops de RottenTomatoes, por favor espera...
+    </div>
+</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    window.onload = function () {
+        fetch("@Url.Action("Index", "Top10")")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.open();
+                document.write(data);
+                document.close();
+            })
+            .catch(error => {
+                console.error('There was an error:', error);
+            });
+    };
+</script>
+
+
+
+

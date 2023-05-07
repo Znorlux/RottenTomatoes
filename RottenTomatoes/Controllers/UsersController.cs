@@ -107,15 +107,18 @@ namespace RottenTomatoes.Controllers
             {
                 return RedirectToAction("RTscrapper", "Home");//Aqui lo mandaremos a la pagina del web scrapper
                                                             
+            }else if (user.UserType == "Cinefilo")
+            {
+                return RedirectToAction("Index","Movies");//Aqui lo mandaremos a la ruta de vista de peliculas y todo
+                                                       //Archivo  Carpeta (vista, controlador)
             }
-            return RedirectToAction(nameof(Index));//Aqui lo mandaremos a la ruta de vista de peliculas y todo
-                                                   //Archivo  Carpeta (vista, controlador)
+            return RedirectToAction(nameof(Index));
         }
-    
 
 
-    // GET: Users/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+
+        // GET: Users/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.User == null)
             {

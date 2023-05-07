@@ -62,8 +62,6 @@ class WebScraper
         var MovieTitle = WebUtility.HtmlDecode(MovieTitleElement); //utilizamos WebUtility.HtmlDecode() porque hay peliculas que
                                                                    //tienen carecteres especiales en sus titulos, asi los devolvemos a como son
 
-        
-
         var ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + MovieTitleElement + "' and @slot='image']")
                             .GetAttributeValue("src", "");
         
@@ -73,10 +71,6 @@ class WebScraper
         var tomatometerScore = scoreBoardElement.GetAttributeValue("tomatometerscore", "");
 
         var AudienceScore = scoreBoardElement.GetAttributeValue("audiencescore", "");
-
-        //Console.WriteLine("Calificacion de la critica " + tomatometerScore + "\n");
-
-        //Console.WriteLine("Calificacion de la audiencia " + AudienceScore + "\n");
 
         var whereToWatchSection = htmlDocument.DocumentNode.SelectSingleNode("//section[@id='where-to-watch']");
 
