@@ -58,10 +58,11 @@ class WebScraper
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(html);
 
-        var MovieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@data-qa='score-panel-movie-title']").InnerText;
+        var MovieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@class='title']").InnerText;
         var MovieTitle = WebUtility.HtmlDecode(MovieTitleElement); //utilizamos WebUtility.HtmlDecode() porque hay peliculas que
                                                                    //tienen carecteres especiales en sus titulos, asi los devolvemos a como son
 
+       
         var ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + MovieTitleElement + "' and @slot='image']")
                             .GetAttributeValue("src", "");
         
@@ -217,7 +218,7 @@ class WebScraper
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(html);
 
-        var SerieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@data-qa='score-panel-movie-title']").InnerText;
+        var SerieTitleElement = htmlDocument.DocumentNode.SelectSingleNode("//h1[@slot='title']").InnerText;
         var SerieTitle = WebUtility.HtmlDecode(SerieTitleElement);
 
         string ImageUrl = null;
@@ -238,6 +239,7 @@ class WebScraper
             ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + SerieTitle.Replace("&", "&amp;") + "' and @slot='image']")
                                 ?.GetAttributeValue("src", "");
         }
+
         var scoreBoardElement = htmlDocument.DocumentNode.SelectSingleNode("//score-board");
 
         var tomatometerScore = scoreBoardElement.GetAttributeValue("tomatometerscore", "");

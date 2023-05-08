@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using RottenTomatoes.Data;
 using RottenTomatoes.Models;
 
+
+
 namespace RottenTomatoes.Controllers
 {
     public class UsersController : Controller
@@ -20,6 +22,7 @@ namespace RottenTomatoes.Controllers
         public UsersController(RottenTomatoesContext context)
         {
             _context = context;
+
         }
 
         // GET: Users
@@ -103,14 +106,28 @@ namespace RottenTomatoes.Controllers
                 ViewBag.Error = "El nombre de usuario o la contraseña son incorrectos.";
                 return View("Login");
             }
-            if(user.UserType == "Experto en cine")
+            if (user.UserType == "Experto en cine")
             {
+                //creamos cookie de usuario de tipo Experto en cine
+                if(Response.Cookies != null)
+                {
+                    Response.Cookies.Delete("UserType");
+                }
+                Response.Cookies.Append("UserType", "Experto en cine");
+
                 return RedirectToAction("RTscrapper", "Home");//Aqui lo mandaremos a la pagina del web scrapper
-                                                            
-            }else if (user.UserType == "Cinefilo")
+
+            }
+            else if (user.UserType == "Cinefilo")
             {
-                return RedirectToAction("Index","Movies");//Aqui lo mandaremos a la ruta de vista de peliculas y todo
-                                                       //Archivo  Carpeta (vista, controlador)
+                //creamos cookie de usuario de tipo Experto en cine
+                if (Response.Cookies != null)
+                {
+                    Response.Cookies.Delete("UserType");
+                }
+                Response.Cookies.Append("UserType", "Cinefilo");
+                return RedirectToAction("Index", "Movies");//Aqui lo mandaremos a la ruta de vista de peliculas y todo
+                                                           //Archivo  Carpeta (vista, controlador)
             }
             return RedirectToAction(nameof(Index));
         }

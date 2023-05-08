@@ -33,7 +33,18 @@ namespace RottenTomatoes.Controllers
         }
         public IActionResult RTscrapper()
         {
-            return View();
+            var userType = Request.Cookies["UserType"];
+
+            if (userType == "Experto en cine")
+            {
+                // Mostrar vista solo para usuarios expertos en cine
+                return View();
+            }
+            else
+            {
+                // Redirigir a la página de inicio si el usuario no es un experto en cine
+                return RedirectToAction("Index", "Home");
+            }
         }
         public IActionResult Recomendaciones()
         {

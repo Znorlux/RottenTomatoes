@@ -82,8 +82,8 @@ namespace RottenTomatoes.Controllers
         public async Task<IActionResult> Index()
         {
             // Ejecutar ambas tareas en paralelo
-            await Task.WhenAll(ClearTop10Data(), add_top10());
 
+            
             // Redirigir al usuario a la vista de Top10
             return _context.Top10 != null ?
                 View(await _context.Top10.ToListAsync()) :
@@ -93,7 +93,8 @@ namespace RottenTomatoes.Controllers
         public async Task<IActionResult> Top10()
         {
             // Redirigir al usuario a la vista de Loading
-            return RedirectToAction("Loading");
+            await Task.WhenAll(ClearTop10Data(), add_top10());
+            return RedirectToAction("Index");
         }
         public async Task ClearTop10Data()
         {

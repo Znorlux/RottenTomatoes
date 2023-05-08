@@ -28,7 +28,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     window.onload = function () {
-        fetch("@Url.Action("Index", "Top10")")
+        fetch("@Url.Action("Top10", "Top10")")
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
