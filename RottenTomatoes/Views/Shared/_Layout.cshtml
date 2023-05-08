@@ -35,22 +35,63 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Series" asp-action="Index">Series</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" onclick="mostrarConfirmacion()" href="/Top10">Top 10</a>
+                            <a class="nav-link text-light" href="#" onclick="mostrarModal()">Top 10</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <script>
-                function mostrarConfirmacion() {
-            var confirmacion = confirm("¿Quieres actualizar los datos del top semanal?", "Si", "No");
+    <div id="modal" class="modal">
+        <div class="modal-content" style="background-color: #ffffff;">
+            <h2>¿Quieres actualizar los datos del top semanal?</h2>
+            <div class="modal-buttons">
+                <button onclick="actualizarTopSemanal()">Sí</button>
+                <button onclick="cerrarModal()">No</button>
+            </div>
+        </div>
+    </div>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
 
-            if (confirmacion) {
-                window.location.href = "/Top10/Loading";
-            } else {
-                window.location.href = "/Top10/Index";
-            }
+        .modal-content {
+            background-color: #ffffff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+    
+
+    <script>
+        function mostrarModal() {
+            document.getElementById("modal").style.display = "block";
+        }
+
+        function cerrarModal() {
+            document.getElementById("modal").style.display = "none";
+            window.location.href = "/Top10/Index";
+        }
+
+        function actualizarTopSemanal() {
+            window.location.href = "/Top10/Loading";
         }
     </script>
     <style>
