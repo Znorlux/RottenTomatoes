@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - RottenTomatoes</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/RottenTomatoes.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -34,16 +35,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Series" asp-action="Index">Series</a>
                         </li>
+                     
                         <li class="nav-item">
                             <a class="nav-link text-light" href="#" onclick="mostrarModal()">Top 10</a>
                         </li>
                     </ul>
                 </div>
-            </div>
+                <ul class="navbar-nav flex-grow-1>">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="FavoriteMovies" asp-action="Index">Favorite Movies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="FavoriteSeries" asp-action="Index">Favorite Series</a>
+                    </li>
+                </ul>
+                
+            </div>        
         </nav>
     </header>
     <div id="modal" class="modal">
-        <div class="modal-content" style="background-color: #ffffff;">
+        <div class="modal-content" style="background-color: #179b77;">
             <h2>¿Quieres actualizar los datos del top semanal?</h2>
             <div class="modal-buttons">
                 <button onclick="actualizarTopSemanal()">Sí</button>
@@ -52,6 +63,7 @@
         </div>
     </div>
     <style>
+       
         .modal {
             display: none;
             position: fixed;
@@ -77,6 +89,14 @@
             display: flex;
             justify-content: space-between;
         }
+        .nav-item {
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+            text-decoration: underline;
+            text-underline-offset: 3px; /* Ajusta el espacio entre el texto y la línea */
+            text-decoration-color: white; /* Define el color de la línea */
+            text-decoration-thickness: 2px; /* Define el grosor de la línea */
+        }
     </style>
     
 
@@ -97,8 +117,7 @@
     <style>
         /* Cambiar la fuente y el peso de la letra de los elementos del menú */
         .navbar-nav .nav-link {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
+
             font-size: 1.2rem;
         }
     </style>

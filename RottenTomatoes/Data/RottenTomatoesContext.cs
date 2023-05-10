@@ -21,5 +21,9 @@ namespace RottenTomatoes.Data
         public DbSet<RottenTomatoes.Models.Serie> Serie { get; set; } = default!;
 
         public DbSet<RottenTomatoes.Models.Top10> Top10 { get; set; } = default!;
+
+        public DbSet<RottenTomatoes.Models.FavoriteMovie> FavoriteMovie { get; set; } = default!;
+
+        public DbSet<RottenTomatoes.Models.FavoriteSerie> FavoriteSerie { get; set; } = default!;
     }
 }

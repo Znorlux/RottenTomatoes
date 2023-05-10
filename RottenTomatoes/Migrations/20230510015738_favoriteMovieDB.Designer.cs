@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RottenTomatoes.Data;
 
@@ -10,9 +11,11 @@ using RottenTomatoes.Data;
 namespace RottenTomatoes.Migrations
 {
     [DbContext(typeof(RottenTomatoesContext))]
-    partial class RottenTomatoesContextModelSnapshot : ModelSnapshot
+    [Migration("20230510015738_favoriteMovieDB")]
+    partial class favoriteMovieDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,29 +45,6 @@ namespace RottenTomatoes.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("FavoriteMovie");
-                });
-
-            modelBuilder.Entity("RottenTomatoes.Models.FavoriteSerie", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("SerieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SerieId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FavoriteSerie");
                 });
 
             modelBuilder.Entity("RottenTomatoes.Models.Movie", b =>
@@ -254,25 +234,6 @@ namespace RottenTomatoes.Migrations
                         .IsRequired();
 
                     b.Navigation("Movie");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("RottenTomatoes.Models.FavoriteSerie", b =>
-                {
-                    b.HasOne("RottenTomatoes.Models.Serie", "Serie")
-                        .WithMany()
-                        .HasForeignKey("SerieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RottenTomatoes.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Serie");
 
                     b.Navigation("User");
                 });

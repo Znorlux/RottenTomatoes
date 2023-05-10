@@ -6,16 +6,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+    <title class="maintitle">
         Movies
     </title>
     <style>
         body {
             background: linear-gradient(#141e30, #243b55);
             color: white;
-            font-family: Arial, sans-serif;
+            
         }
-
+        .maintitle{
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+        }
         .container {
             max-width: 960px;
             margin: 0 auto;
@@ -114,6 +118,9 @@
                         <h3 class="titles">Audience Review:</h3>
                         <p>@item.AudienceReview</p>
                     </div>
+                    <form method="post" asp-action="AddToFavorites">
+                        <a asp-controller="FavoriteMovies" asp-action="AddToFavorites" asp-route-movieId="@item.MovieId">Add to Favorites</a>
+                    </form>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.MovieId">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.MovieId">Details</a> |

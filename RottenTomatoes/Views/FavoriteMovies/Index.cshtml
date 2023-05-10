@@ -1,0 +1,39 @@
+﻿@model IEnumerable<RottenTomatoes.Models.FavoriteMovie>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Favorite Movies</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Movie.Title)
+            </td>
+            <td>
+                <a asp-controller= "Movies"asp-action="Details" asp-route-id="@item.Movie.MovieId">See movie details</a>               
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

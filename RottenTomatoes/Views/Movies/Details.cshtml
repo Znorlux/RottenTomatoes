@@ -3,104 +3,159 @@
 @{
     ViewData["Title"] = "Details";
 }
+<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+<style>
+    body {
+        background: linear-gradient(#141e30, #243b55);
+        font-family: Arial, sans-serif;
+        color: white;
+    }
 
-<h1>Details</h1>
+    h1, h4 {
+        font-family: 'Raleway', sans-serif;
+        font-weight: bold;
+        text-align: center;
+    }
 
-<div>
-    <h4>Movie</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CriticReview)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CriticReview)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AudienceReview)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AudienceReview)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Clasification)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Clasification)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OriginalLanguage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OriginalLanguage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Director)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Director)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Runtime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Runtime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ActorRoles)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ActorRoles)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageURL)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageURL)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TomatometerScore)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TomatometerScore)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AudienceScore)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AudienceScore)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Platforms)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Platforms)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Synopsis)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Synopsis)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReleaseDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReleaseDate)
-        </dd>
-    </dl>
+    dl.row {
+        margin-top: 30px;
+    }
+
+    dt {
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    dd {
+        margin-left: 0;
+    }
+
+    .movie-image {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .edit-link,
+    .back-link {
+        display: inline-block;
+        background-color: white;
+        color: #243b55;
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin-top: 20px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+        .edit-link:hover,
+        .back-link:hover {
+            background-color: #243b55;
+            color: white;
+        }
+
+    .movie-info {
+        border: 5px solid #ffffff;
+        /*background-image: url("/css/bluebg.png");/**/
+        background-size: cover;
+        padding: 20px;
+    }
+
+    .white-border {
+        border: px solid white;
+    }
+</style>
+
+<h1>@Html.DisplayFor(model => model.Title)</h1>
+
+<div class="container movie-info">
+    <div class="row">
+        <div class="col-md-4">
+            <img class="movie-image white-border" src="@Model.ImageURL" alt="Movie poster" width="500" height="750" />
+        </div>
+        <div class="col-md-8">
+            <dl class="row">
+                <dt class="col-sm-3">
+                    Synopsis
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Synopsis)
+                </dd>
+                <dt class="col-sm-3">
+                    Tomatometer Score
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.TomatometerScore)%
+                </dd>
+                <dt class="col-sm-3">
+                    Audience Score
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.AudienceScore)%
+                </dd>
+                <dt class="col-sm-3">
+                    Classification
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Clasification)
+                </dd>
+                <dt class="col-sm-3">
+                    Platforms
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Platforms)
+                </dd>
+                <dt class="col-sm-3">
+                    Genre
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Genre)
+                </dd>
+                <dt class="col-sm-3">
+                    Release Date
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.ReleaseDate)
+                </dd>
+                <dt class="col-sm-3">
+                    Original Language
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.OriginalLanguage)
+                </dd>
+                <dt class="col-sm-3">
+                    Director
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Director)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Runtime)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Runtime)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ActorRoles)
+                </dt>
+                <dd class="col-sm-10" style="white-space: pre-line;">
+                    @Html.DisplayFor(model => model.ActorRoles)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CriticReview)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CriticReview)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.AudienceReview)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.AudienceReview)
+                </dd>
+            </dl>
+        </div>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.MovieId">Edit</a> |

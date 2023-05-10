@@ -104,7 +104,10 @@
                     <div class="movie-actor-roles" style="white-space: pre-line;">
                         <h3 class="titles">Main Actors:</h3>
                         <p>@item.mainActors</p>
-                    </div>     
+                    </div>
+                    <form method="post" asp-action="AddToFavorites">
+                        <a asp-controller="FavoriteSeries" asp-action="AddToFavorites" asp-route-serieId="@item.SerieId">Add to Favorites</a>
+                    </form>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.SerieId">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.SerieId">Details</a> |

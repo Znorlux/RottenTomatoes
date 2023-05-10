@@ -112,8 +112,11 @@ namespace RottenTomatoes.Controllers
                 if(Response.Cookies != null)
                 {
                     Response.Cookies.Delete("UserType");
+                    Response.Cookies.Delete("UserId");
+
                 }
                 Response.Cookies.Append("UserType", "Experto en cine");
+                Response.Cookies.Append("UserId", user.UserId.ToString());
 
                 return RedirectToAction("RTscrapper", "Home");//Aqui lo mandaremos a la pagina del web scrapper
 
@@ -124,8 +127,10 @@ namespace RottenTomatoes.Controllers
                 if (Response.Cookies != null)
                 {
                     Response.Cookies.Delete("UserType");
+                    Response.Cookies.Delete("UserId");
                 }
                 Response.Cookies.Append("UserType", "Cinefilo");
+                Response.Cookies.Append("UserId", user.UserId.ToString());
                 return RedirectToAction("Index", "Movies");//Aqui lo mandaremos a la ruta de vista de peliculas y todo
                                                            //Archivo  Carpeta (vista, controlador)
             }

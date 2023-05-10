@@ -15,7 +15,11 @@ namespace RottenTomatoes.Models
         public string Runtime { get; set; }
         //actor - rol      
         public string ActorRoles { get; set; }
-        public Movie() { }
+        public virtual ICollection<FavoriteMovie> FavoriteMovie { get; set; }
+
+        public Movie() {
+            this.FavoriteMovie = new HashSet<FavoriteMovie>();
+        }
 
         public Movie(string Title, string ImageUrl, string TomatometerScore, string
             AudienceScore, string Platforms, string Synopsis, string Clasification,
@@ -37,6 +41,8 @@ namespace RottenTomatoes.Models
             this.ActorRoles = ActorRoles;
             this.CriticReview = CriticReview;
             this.AudienceReview = AudienceReview;
+            this.FavoriteMovie = new HashSet<FavoriteMovie>();
+
         }
     }
 }
