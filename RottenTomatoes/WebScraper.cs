@@ -225,8 +225,10 @@ class WebScraper
 
         try
         {
-            ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@alt='Watch trailer for " + SerieTitle + "' and @slot='image']")
+            ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@data-qa='poster-image' and @slot='image']")
                                 .GetAttributeValue("src", "");
+            //ImageUrl = htmlDocument.DocumentNode.SelectSingleNode("//img[@data-qa='Watch trailer for " + SerieTitle + "' and @slot='image']")
+                                //.GetAttributeValue("src", "");
         }
         catch (NullReferenceException)
         {

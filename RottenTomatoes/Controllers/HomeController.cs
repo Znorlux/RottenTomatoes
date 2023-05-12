@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Security.Policy;
 using System.Text;
 
+
+
 namespace RottenTomatoes.Controllers
 {
     public class HomeController : Controller
@@ -20,7 +22,22 @@ namespace RottenTomatoes.Controllers
             _logger = logger;
             _context = context;
         }
+        public IActionResult SmartSearch()
+        {
 
+            return View();
+        }
+        public IActionResult BingChat(string showType, string prompt)
+        {
+            string respuesta = "En desarrollo...";
+
+            // Pasar la respuesta a la vista SmartSearch
+            ViewBag.Respuesta = respuesta;
+
+            // Redirigir a la vista SmartSearch
+            return View("SmartSearch");
+
+        }
         public IActionResult Index()
         {
             

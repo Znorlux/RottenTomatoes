@@ -1,0 +1,122 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    <meta charset="UTF-8">
+    <title>SmartSearch RottenTomatoes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            background: #1c2331; /* color base */
+            background: linear-gradient(35deg, #172b3b, #1f3849); /* degradado */
+            color: #ffffff;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .form-control {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .btn-primary {
+            background-color: #179b77;
+            border-color: #179b77;
+        }
+
+        .btn-primary:hover {
+                background-color: #148264;
+                border-color: #148264;
+        }
+
+        .formulario {
+            border: 2px solid #179b77;
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+            .formulario label {
+                font-size: 18px;
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .formulario select {
+                font-size: 18px;
+                padding: 5px 10px;
+                border: 2px solid #179b77;
+                border-radius: 4px;
+                background-color: #f5f5f5;
+                color: #555;
+            }
+
+            .formulario .campo {
+                margin-top: 20px;
+            }
+
+                .formulario .campo label {
+                    display: block;
+                    font-size: 18px;
+                    margin-bottom: 10px;
+                }
+
+            .formulario input[type="text"] {
+                font-size: 18px;
+                padding: 5px 10px;
+                border: 2px solid #179b77;
+                border-radius: 4px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Busca recomendaciones con ayuda de Bing Chat!</h1>
+        <hr>
+        @if (TempData["Success"] != null)
+        {
+            
+        }
+        <form method="post" action="@Url.Action("BingChat", "Home")">
+            <div class="formulario">
+                <label for="showType">
+                    <i class="fas fa-film"></i>
+                    Selecciona el tipo de show que quieres buscar:
+                </label>
+                <select name="showType" id="showType">
+                    <option value="pelicula"><i class="fas fa-film"></i> Película</option>
+                    <option value="serie"><i class="fas fa-tv"></i> Serie</option>
+                </select>
+                <div class="campo">
+                    <label for="prompt">Ingrese su busqueda</label>
+                    <input type="text" id="prompt" name="prompt">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Preguntar</button>
+        </form>
+    </div>
+    <div class="resultado" style="margin-top: 20px;">
+        <p>La respuesta es: @ViewBag.Respuesta</p>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

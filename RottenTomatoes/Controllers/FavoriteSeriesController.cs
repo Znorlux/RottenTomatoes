@@ -22,8 +22,15 @@ namespace RottenTomatoes.Controllers
         // GET: FavoriteSeries
         public async Task<IActionResult> Index()
         {
-            var rottenTomatoesContext = _context.FavoriteSerie.Include(f => f.Serie).Include(f => f.User);
-            return View(await rottenTomatoesContext.ToListAsync());
+            var cookie_userId = Request.Cookies["UserId"];
+            int userId = int.Parse(cookie_userId);
+
+            var favoriteSeries = await _context.FavoriteSerie
+            .Include(f => f.Serie)
+            .Include(f => f.User)
+            .Where(f => f.UserId == userId) // Filtrar los favoritos del usuario actual
+            .ToListAsync();
+            return View(favoriteSeries);
         }
 
         // GET: FavoriteSeries/Details/5

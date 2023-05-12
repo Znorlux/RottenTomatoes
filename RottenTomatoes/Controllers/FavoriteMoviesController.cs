@@ -22,8 +22,15 @@ namespace RottenTomatoes.Controllers
         // GET: FavoriteMovies
         public async Task<IActionResult> Index()
         {
-            var rottenTomatoesContext = _context.FavoriteMovie.Include(f => f.Movie).Include(f => f.User);
-            return View(await rottenTomatoesContext.ToListAsync());
+            var cookie_userId = Request.Cookies["UserId"];
+            int userId = int.Parse(cookie_userId);
+
+            var favoriteMovies = await _context.FavoriteMovie
+            .Include(f => f.Movie)
+            .Include(f => f.User)
+            .Where(f => f.UserId == userId) // Filtrar los favoritos del usuario actual
+            .ToListAsync();
+            return View(favoriteMovies);
         }
 
         // GET: FavoriteMovies/Details/5
@@ -57,7 +64,7 @@ namespace RottenTomatoes.Controllers
             await Create(favoriteMovie);
             // Guardar el objeto 'favorite' en la base de datos
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
         public IActionResult Create()
         {
