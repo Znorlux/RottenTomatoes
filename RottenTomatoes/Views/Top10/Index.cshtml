@@ -4,21 +4,66 @@
     ViewData["Title"] = "Index";
 }
 
+<style>   
+    /* Estilo para la tabla */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    /* Estilo para las filas */
+    tr {
+
+        border: 1px solid black;
+    }
+
+    /* Estilo para las celdas */
+    td {
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* Estilo para las filas impares */
+    tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    /* Estilo para el encabezado de la tabla */
+    th {
+        background-color: linear-gradient(35deg, #172b3b, #1f3849);
+        color: black;
+        font-weight: bold;
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* Estilo para los enlaces */
+    a {
+        color: #172b3b;
+    }
+
+    /* Estilo para los enlaces al pasar el cursor por encima */
+    a:hover {
+        color: #1f3849;
+        text-decoration: none;
+    }
+</style>
+
 <h1>Top 10</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 
 <h2>Películas</h2>
-<table class="table">
+<table>
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.title)
+                Título
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.url)
+                URL
             </th>
             <th></th>
         </tr>
@@ -26,32 +71,31 @@
     <tbody>
         @foreach (var item in Model.Take(10))
         {
-            <tr>
-                <td>
+                <tr>
+                    <td>
                     @Html.DisplayFor(modelItem => item.title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.url)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Top10Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Top10Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Top10Id">Delete</a>
-                </td>
-            </tr>
+                    </td>
+                    <td><a href="@item.url" target="_blank">@item.url</a>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Top10Id">Editar</a> |
+                        <a asp-action="Details" asp-route-id="@item.Top10Id">Detalles</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Top10Id">Eliminar</a>
+                    </td>
+                </tr>
         }
     </tbody>
 </table>
 
 <h2>Series</h2>
-<table class="table">
+<table>
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.title)
+                Título
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.url)
+                URL
             </th>
             <th></th>
         </tr>
@@ -59,19 +103,21 @@
     <tbody>
         @foreach (var item in Model.Skip(10))
         {
-            <tr>
-                <td>
+                <tr>
+                    <td>
                     @Html.DisplayFor(modelItem => item.title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.url)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Top10Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Top10Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Top10Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    </td>                   
+                    <td><a href="@item.url" target="_blank">@item.url</a>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Top10Id">Editar</a> |
+                        <a asp-action="Details" asp-route-id="@item.Top10Id">Detalles</a> |
+                                <a href="@Url.Action("Delete", new { id = item.Top10Id })">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

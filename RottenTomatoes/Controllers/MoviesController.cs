@@ -20,12 +20,38 @@ namespace RottenTomatoes.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> FilterMoviesDown()
         {
-            
-              return _context.Movie != null ? 
-                          View(await _context.Movie.ToListAsync()) :
-                          Problem("Entity set 'RottenTomatoesContext.Movie'  is null.");
+            var model = _context.Movie.OrderBy(m => Convert.ToInt32(m.TomatometerScore));
+            ViewBag.Filter = true;
+            ViewBag.FilterDown = "Worst tomatometer score movies";
+            return View("Index", model);
+        }
+        public async Task<IActionResult> FilterMoviesUp()
+        {
+            var model = _context.Movie.OrderByDescending(m => Convert.ToInt32(m.TomatometerScore));
+            ViewBag.Filter = true;
+            ViewBag.FilterUp = "Best tomatometer score movies";
+            return View("Index", model);
+        }
+
+        public IActionResult Index()
+        {
+            bool filter = false;
+            if (ViewBag.Filter != null)
+            {
+                filter = ViewBag.Filter;
+            }
+
+            if (filter)
+            {
+                return View((List<Movie>)ViewBag.Model);
+            }
+            else
+            {
+                var model = _context.Movie.ToList();
+                return View(model);
+            }
         }
         public async Task ClearTop10Data()
         {

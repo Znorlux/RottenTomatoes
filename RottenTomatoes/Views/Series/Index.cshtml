@@ -6,7 +6,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
     <title>
         Movies
     </title>
@@ -14,9 +16,11 @@
         body {
             background: linear-gradient(#141e30, #243b55);
             color: white;
-            font-family: Arial, sans-serif;
         }
-
+        .main-title{
+            font-family: 'Raleway', sans-serif;
+            font-weight: bold;
+        }
         .container {
             max-width: 960px;
             margin: 0 auto;
@@ -82,12 +86,37 @@
             .movie-audience-review p {
                 margin: 0;
             }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Series Recommendations</h1>
-
+        <h1 class="main-title">Series Recommendations</h1>
+        <div class="button-container">
+            <form method="post" asp-action="FilterSeriesUp">
+                <button type="submit" class="btn btn-success">Sort by best TomatometerScore</button>
+            </form>
+            <form method="post" asp-action="FilterSeriesDown">
+                <button type="submit" class="btn btn-success">Sort by worst TomatometerScore</button>
+            </form>
+        </div>
+        @if (ViewBag.FilterDown != null)
+        {
+            <h1 style="color: red;">@ViewBag.FilterDown</h1>
+        }
+        @if (ViewBag.FilterUp != null)
+        {
+            <h1 style="color: green;">@ViewBag.FilterUp</h1>
+        }
         @foreach (var item in Model)
         {
             <div class="movie">

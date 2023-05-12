@@ -5,6 +5,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
     <title class="maintitle">
@@ -85,13 +87,38 @@
             .movie-audience-review p {
                 margin: 0;
             }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Movies Recommendations</h1>
-
-        @foreach (var item in Model)
+        <div class="button-container">
+            <form method="post" asp-action="FilterMoviesUp">
+                <button type="submit" class="btn btn-success">Sort by best TomatometerScore</button>
+            </form>
+            <form method="post" asp-action="FilterMoviesDown">
+                <button type="submit" class="btn btn-success">Sort by worst TomatometerScore</button>
+            </form>
+        </div>
+        @if (ViewBag.FilterDown != null)
+        {
+            <h1 style="color: red;">@ViewBag.FilterDown</h1>
+        }
+        @if (ViewBag.FilterUp != null)
+        {
+            <h1 style="color: green;">@ViewBag.FilterUp</h1>
+        }
+        @foreach (var item in Model) 
         {
             <div class="movie">
                 <div class="movie-image" style="background-image: url('@item.ImageURL')"></div>
@@ -130,5 +157,18 @@
             </div>
         }
     </div>
+    <script>
+        function sortMovies() {
+            const movies = document.querySelectorAll('.movie');
+            const sortedMovies = Array.from(movies).sort((a, b) => {
+                const aScore = parseInt(a.getAttribute('data-tomatometer'));
+                const bScore = parseInt(b.getAttribute('data-tomatometer'));
+                return bScore - aScore;
+            });
+            const container = document.querySelector('.container');
+            container.innerHTML = '';
+            sortedMovies.forEach(movie => container.appendChild(movie));
+        }
+    </script>
 </body>
 </html>

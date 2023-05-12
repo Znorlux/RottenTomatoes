@@ -19,12 +19,38 @@ namespace RottenTomatoes.Controllers
             _context = context;
         }
 
-        // GET: Series
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> FilterSeriesDown()
         {
-              return _context.Serie != null ? 
-                          View(await _context.Serie.ToListAsync()) :
-                          Problem("Entity set 'RottenTomatoesContext.Serie'  is null.");
+            var model = _context.Serie.OrderBy(m => Convert.ToInt32(m.TomatometerScore));
+            ViewBag.Filter = true;
+            ViewBag.FilterDown = "Worst tomatometer score series";
+            return View("Index", model);
+        }
+        public async Task<IActionResult> FilterSeriesUp()
+        {
+            var model = _context.Serie.OrderByDescending(m => Convert.ToInt32(m.TomatometerScore));
+            ViewBag.Filter = true;
+            ViewBag.FilterUp = "Best tomatometer score movies";
+            return View("Index", model);
+        }
+
+        public IActionResult Index()
+        {
+            bool filter = false;
+            if (ViewBag.Filter != null)
+            {
+                filter = ViewBag.Filter;
+            }
+
+            if (filter)
+            {
+                return View((List<Serie>)ViewBag.Model);
+            }
+            else
+            {
+                var model = _context.Serie.ToList();
+                return View(model);
+            }
         }
 
         // GET: Series/Details/5
